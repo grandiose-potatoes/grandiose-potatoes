@@ -1,3 +1,4 @@
+var db = require('./db/db')
 var express = require('express'); 
 var bodyParser = require('body-parser'); 
 
@@ -8,3 +9,4 @@ app.port = 3000;
 app.listen(app.port, function(){
 	console.log('we are listening!')
 }); 
+
