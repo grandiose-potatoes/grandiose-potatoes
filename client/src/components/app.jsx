@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react';
+import {VideoPlayer} from './VideoPlayer.jsx';
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -9,7 +10,10 @@ export default class App extends React.Component {
 		return (
 			<div>
 				<h2>yo</h2>
-			</div>
+				<VideoPlayer video={
+					{url: "supbreeeeh"}
+				}/>
+  		</div>
 		)
 	}
 }
