@@ -25,5 +25,10 @@ app.post('/api/questions', function(req, res) {
     console.log(question.get('txt'));
     res.end();
   })
-   
+});
+
+app.get('/api/questions', function(req, res) {
+  db.Question.findAll().then(function(questions) {
+    res.send(questions);
+  });
 });
