@@ -31,7 +31,7 @@ Video.belongsTo(User);
 User.hasMany(Video);
 
 var Question = db.define('question', {
-  text: Sequelize.STRING, 
+  txt: Sequelize.STRING, 
   receiverId: Sequelize.INTEGER
 });
 
