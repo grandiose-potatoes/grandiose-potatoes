@@ -3,3 +3,5 @@
 node_modules
 client/compiled
 client/lib
+client/bundle.js
+clinet/bundle.js.map
