@@ -28,7 +28,9 @@ app.post('/api/questions', function(req, res) {
 });
 
 app.get('/api/questions', function(req, res) {
+  console.log('getting a request', req);
   db.Question.findAll().then(function(questions) {
+    console.log('inside of server', questions);
     res.send(questions);
   });
 });
