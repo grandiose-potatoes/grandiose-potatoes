@@ -17,4 +17,21 @@ module.exports = {
     }
   },
 
+  users: {
+    get: function(req, res) {
+      //user validation
+    },
+    post: function(req, res) {
+      //check if username already exists
+        //if so send respond to client to type new username
+      //else
+        //create new userObject, hash password, etc.
+        //write to database
+    }
+  },
+
+  videos: {
+    get: function(req, res) {},
+    post: function(req,res) {}
+  }
 };
