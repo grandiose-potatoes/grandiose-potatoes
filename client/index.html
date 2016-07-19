@@ -1,9 +1,9 @@
 <html>
   <head>
   </head>
-	<body>
-		<div id='app'>
-		</div>
+  <body>
+    <div id='app'>
+    </div>
 
 
     <video id="gum" autoplay muted></video>
@@ -15,10 +15,12 @@
       <button id="download" disabled>Download</button>
     </div>
 
-	</body>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="./src/adapter.js"></script>
   <script>
     'use strict';
+
     var mediaRecorder;
     var recordedBlobs;
     var sourceBuffer;
@@ -31,7 +33,7 @@
     var downloadButton = document.querySelector('button#download');
     recordButton.onclick = toggleRecording;
     playButton.onclick = play;
-    downloadButton.onclick = download;
+    downloadButton.onclick = save;
 
     // window.isSecureContext could be used for Chrome
     var isSecureOrigin = location.protocol === 'https:' ||
@@ -145,6 +147,40 @@
       var superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
       recordedVideo.src = window.URL.createObjectURL(superBuffer);
     }
+
+    function save() {
+      // We are saving the Blob data into a superBuffer
+      var superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
+
+      // We are using Post request to get a pre-signed URL from S3.  
+      // S3 will give us a pre-signed URL so that allow users to write to that address in a given time
+      // then using ajax put request to write the file in server 
+      $.ajax({
+        type: 'POST',
+        url:'/api/videos', // this is our own server 
+        success: function(data){
+          console.log('we are getting this pre-signed from our server and then from S3', data.preSignedUrl)
+          console.log('we can use this publicUrl to display on page', data.publicUrl)
+          // putting the object into S3
+          putObject(data.preSignedUrl); 
+        }
+      })
+
+      // this is the put ajax call for the request
+      var putObject = function(url){
+        $.ajax({
+          type: 'PUT', 
+          data: superBuffer, 
+          url: url, 
+          processData: false,
+          contentType: 'video/webm', 
+          success: function(data){
+            console.log('object put in S3 ', data)
+          }
+        })
+      }
+
+    }
   </script>
-	<script src='/bundle.js'></script>
+  <script src='/bundle.js'></script>
 </html>
