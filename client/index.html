@@ -2,19 +2,7 @@
   <head>
   </head>
   <body>
-    <div id='app'>
-    </div>
-
-
-    <video id="gum" autoplay muted></video>
-    <video id="recorded" autoplay loop></video>
-
-    <div>
-      <button id="record">Start Recording</button>
-      <button id="play" disabled>Play</button>
-      <button id="download" disabled>Download</button>
-    </div>
-
+    <div id='app'></div>
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="./src/adapter.js"></script>
@@ -25,15 +13,15 @@
     var recordedBlobs;
     var sourceBuffer;
 
-    var gumVideo = document.querySelector('video#gum');
-    var recordedVideo = document.querySelector('video#recorded');
+    // var gumVideo = document.querySelector('video#gum');
+    // var recordedVideo = document.querySelector('video#recorded');
 
-    var recordButton = document.querySelector('button#record');
-    var playButton = document.querySelector('button#play');
-    var downloadButton = document.querySelector('button#download');
-    recordButton.onclick = toggleRecording;
-    playButton.onclick = play;
-    downloadButton.onclick = save;
+    // var recordButton = document.querySelector('button#record');
+    // var playButton = document.querySelector('button#play');
+    // var downloadButton = document.querySelector('button#download');
+    // recordButton.onclick = toggleRecording;
+    // playButton.onclick = play;
+    // downloadButton.onclick = save;
 
     // window.isSecureContext could be used for Chrome
     var isSecureOrigin = location.protocol === 'https:' ||

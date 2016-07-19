@@ -1,15 +1,16 @@
 'use strict';
 import React from 'react';
-class Record extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
+export let Record = (props) => {
+  return (
+    <div>
+      <h1> Record a Video </h1>
+      <video id="gum" autoplay muted></video>
       <div>
-        <h1> In the record </h1>
+        <button id="record">Start Recording</button>
+        <button id="play" disabled>Play</button>
+        <button id="download" disabled>Download</button>
       </div>
-    )
-  }
+      <video id="recorded" autoplay loop></video>
+    </div>
+  )
 }

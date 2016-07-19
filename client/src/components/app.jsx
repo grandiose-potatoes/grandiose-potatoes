@@ -1,7 +1,10 @@
 'use strict'
 import React from 'react';
-import {VideoPlayer} from './VideoPlayer.jsx';
 import $ from 'jquery';
+import {VideoPlayer} from './VideoPlayer.jsx';
+import {Record} from './Record.jsx';
+
+
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -40,7 +43,7 @@ export default class App extends React.Component {
 			<div>
 				<p>{this.state.question}</p>
 				<h2>yo</h2>
-				<VideoPlayer video={this.state.video}/>
+				<Record />
   		</div>
 		)
 	}
