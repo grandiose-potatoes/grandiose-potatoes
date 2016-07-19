@@ -1,4 +1,4 @@
-var db = require('./db/db')
+var db = require('./db/db');
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = require('./routes');
@@ -9,7 +9,7 @@ app.use(express.static(__dirname + '/../client'));
 app.port = 3000;
 
 app.listen(app.port, function(){
-	console.log('we are listening!')
+	console.log('we are listening!');
 });
 
 app.use(bodyParser.json());
@@ -18,3 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //middleware for routes
 //https://expressjs.com/en/guide/routing.html
 app.use('/', router);
+
+app.use(bodyParser.json()); 
+
