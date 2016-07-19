@@ -1,4 +1,4 @@
-var models = require('./db/db');
+var db = require('./db/db');
 
 module.exports = {
 
@@ -9,7 +9,7 @@ module.exports = {
       });
     },
     post: function(req, res) {
-      var question = req.body.txt;
+      var question = req.body.txt
       db.Question.create({txt: question})
         .then(function(question) {
         res.end();
@@ -29,7 +29,7 @@ module.exports = {
         //write to database
     }
   },
-
+  
   videos: {
     get: function(req, res) {},
     post: function(req,res) {}
