@@ -1,4 +1,4 @@
-var controller = require('./controllers');
+var controller = require('./controllers.js');
 var router = require('express').Router();
 
 router.get('/api/questions', controller.questions.get);
