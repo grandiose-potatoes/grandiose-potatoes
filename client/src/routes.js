@@ -1,6 +1,5 @@
 import React from 'react';
-import {browserHistory, Router, Route} from 'react-router';
-
+import {Router, Route} from 'react-router';
 import App from './components/App.jsx';
 import {Record} from './components/Record.jsx';
 import {VideoPlayer} from './components/VideoPlayer.jsx';

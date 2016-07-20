@@ -1,3 +1,4 @@
+var path = require('path');
 var db = require('./db/db');
 var AWS = require('aws-sdk');
 var key = require('./config')
@@ -56,6 +57,13 @@ module.exports = {
       var preSignedUrl = s3.getSignedUrl('putObject', params);
       var publicUrl = 'https://s3.amazonaws.com/'+ params.Bucket +'/' + params.Key;
       res.send({preSignedUrl: preSignedUrl, publicUrl: publicUrl});   
+    }
+  },
+
+  home: {
+    get: function(req, res) {
+      console.log('in the home');
+      res.sendFile(path.resolve(__dirname + '/../client/index.html'));
     }
   }
 
