@@ -2,47 +2,19 @@
 import React from 'react';
 import {Link} from 'react-router'
 import $ from 'jquery';
-import {VideoPlayer} from './VideoPlayer.jsx';
-import {Record} from './Record.jsx';
 
 
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			video: null,
-			question: null,
-			recordState: false
-		}
-	}
-
-	componentDidMount() {
-		//ajax request get back video object
-		this.setState({
-			video: {
-				url: 'https://www.youtube.com/embed/pckNsrbZU0U'
-			}
-		});
-
-		var getQuestion = function(txt) {
-			this.setState({
-				question: txt
-			})
-		}.bind(this);
-
-		$.ajax({
-			method: 'GET',
-			url: '/api/questions',
-			success: function(data) {
-				getQuestion(data[0].txt);
-			}
-		})
-
 	}
 
 	render() {
 		return (
 			<div>
+				<h1>
+				This is the homepage
+				</h1>
 				<Link to="/record">
 					<h2> Click Me </h2>
 				</Link>
@@ -55,4 +27,5 @@ export default class App extends React.Component {
   		</div>
 		)
 	}
+
 }
