@@ -1,5 +1,5 @@
 import React from 'react';
-export var VideoPlayer = function (props) {
+export let VideoPlayer = function (props) {
   if (props.video) {
 
     return (
