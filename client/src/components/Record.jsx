@@ -78,7 +78,7 @@ export default class Record extends React.Component {
     }
   }
 
-  startRec() {
+  startRec() {  
     //Check browswer and set the supported types to options
     let options = this.getSupportedTypes()
     //Toggle button text and set recording boolean to true
@@ -87,7 +87,8 @@ export default class Record extends React.Component {
     this.setState({
       toggleRecText: 'Stop Recording',
       isRec: true,
-      mediaRecorder: mediaRecorder
+      mediaRecorder: mediaRecorder,
+      blobs: []
     })
 
     //When data becomes available, call function to handle the data
@@ -97,6 +98,7 @@ export default class Record extends React.Component {
 
   handleDataAvailable(event) {
     //If there is data add the data to the blobs array
+    console.log(event.data);
     if (event.data && event.data.size > 0) {
       this.setState({
         blobs: this.state.blobs.concat(event.data)
@@ -124,6 +126,7 @@ export default class Record extends React.Component {
     //Give the video element control buttons
     document.getElementById('recorded').controls = true
     //Allow user to play back recording
+    console.log('the super blob', this.state.superBlob);
     this.setState({
       recVidUrl: window.URL.createObjectURL(this.state.superBlob)
     })
