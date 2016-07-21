@@ -4,6 +4,7 @@ var AWS = require('aws-sdk');
 var key = require('./config')
 AWS.config.update({accessKeyId: key.accessKeyId, secretAccessKey: key.secretAccessKey});
 AWS.config.update({region: 'us-east-1'});
+var shortid = require('shortid');
 
 // teammates: please create a config.js file in the same directory and paste the code below 
 // module.exports = {
@@ -44,19 +45,29 @@ module.exports = {
   videos: {
     get: function(req, res) {},
     post: function(req,res) {
-      // Get pre-signed URL from S3 then send back to client and client will do the PUT request  
+       console.log('in the post');
+    },
+    presigned: function(req, res) {
+      //Generate unique filename for video
+      var awsFilename = Date.now() + '-' + shortid.generate();
+      // Get pre-signed URL from S3 then send back to client and client will do the PUT request to S3
+      // pre-signed URL will be valid for 600 seconds 
       var s3 = new AWS.S3();
       var params = {
+        //Setup with your bucket name
         Bucket: 'greenfield-hr44', 
-        Key: 'changeThisAsYourFileName', 
+        Key: awsFilename, 
         ContentType: 'video/webm',
         ACL: 'public-read', 
         Expires: 600
       }; // this is the time which the URL is available for putting file
       
       var preSignedUrl = s3.getSignedUrl('putObject', params);
+
+      //Format of publicUrl
       var publicUrl = 'https://s3.amazonaws.com/'+ params.Bucket +'/' + params.Key;
-      res.send({preSignedUrl: preSignedUrl, publicUrl: publicUrl});   
+
+      res.send({preSignedUrl: preSignedUrl, publicUrl: publicUrl});  
     }
   },
 

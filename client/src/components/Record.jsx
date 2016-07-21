@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import { getPreSignedUrl, getSupportedTypes, postVideoUrl, putObjectToS3 } from '../recordUtil.js';
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -14,6 +15,14 @@ export default class Record extends React.Component {
       superBlob: null,
       recVidUrl: null
     }
+    //Bind functions to component
+    this.requestUserMedia = this.requestUserMedia.bind(this);
+    this.handleConnect = this.handleConnect.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.toggleRec = this.toggleRec.bind(this);
+    this.handleDataAvailable = this.handleDataAvailable.bind(this);
+    this.playRec = this.playRec.bind(this);
+    this.uploadRec = this.uploadRec.bind(this);
   }
 
   componentDidMount() {
@@ -39,9 +48,9 @@ export default class Record extends React.Component {
         <h1> Record a Video </h1>
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
-          <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
-          <button id="play" onClick={this.playRec.bind(this)}>Play</button>
-          <button id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
+          <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
+          <button id="play" onClick={this.playRec}>Play</button>
+          <button id="upload" onClick={this.uploadRec}>Share</button>
         </div>
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
       </div>
@@ -52,7 +61,7 @@ export default class Record extends React.Component {
     //Use native web api for Media Recorder (https://developers.google.com/web/updates/2016/01/mediarecorder)
     //to get the user audio and video
     navigator.mediaDevices.getUserMedia({audio: true, video: true}).
-    then(this.handleConnect.bind(this)).catch(this.handleError);
+    then(this.handleConnect).catch(this.handleError);
   }
 
   handleConnect(stream) {
@@ -80,7 +89,7 @@ export default class Record extends React.Component {
 
   startRec() {  
     //Check browswer and set the supported types to options
-    let options = this.getSupportedTypes()
+    let options = getSupportedTypes()
     //Toggle button text and set recording boolean to true
     //Instantiate MediaRecorder
     let mediaRecorder = new MediaRecorder(this.state.stream, options)
@@ -98,7 +107,6 @@ export default class Record extends React.Component {
 
   handleDataAvailable(event) {
     //If there is data add the data to the blobs array
-    console.log(event.data);
     if (event.data && event.data.size > 0) {
       this.setState({
         blobs: this.state.blobs.concat(event.data)
@@ -132,55 +140,14 @@ export default class Record extends React.Component {
     })
   }
 
+
   uploadRec() {
-    //Post request to the server to get a presigned url from s3
-    //Presigned url allows to post to s3 bucket at a specific endpoint
-    let putObject = this.putObject.bind(this);
-    $.ajax({
-      type: 'POST',
-      url:'/api/videos', // this is our own server 
-      success: function(data) {
-        //Function to put the data to s3 with the preSignedUrl
-        putObject(data.preSignedUrl); 
-      },
-      error: function() {
-        console.log('error getting preSignedUrl');
-      }
+    //Get the pre-signed url from the server, data in promise is in the following format
+    // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
+    getPreSignedUrl(this.state.superBlob)
+    .then((data) => {
+      //Upload data to S3 with pre-signed url
+      return putObjectToS3(data, postVideoUrl)
     })
-  }
-
-  putObject(preSignedUrl) {
-    let superBlob = this.state.superBlob;
-    console.log('the superBlob:', superBlob);
-    $.ajax({
-      type: 'PUT', 
-      data: superBlob, 
-      url: preSignedUrl, 
-      processData: false,
-      contentType: 'video/webm', 
-      success: function(data){
-        console.log('object put in S3 ', data);
-      },
-      error: function() {
-        console.log('error uploading to s3');
-      }
-    })
-  }
-
-  getSupportedTypes() {
-    let options = {mimeType: 'video/webm;codecs=vp9'};
-    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      console.log(options.mimeType + ' is not Supported');
-      options = {mimeType: 'video/webm;codecs=vp8'};
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        console.log(options.mimeType + ' is not Supported');
-        options = {mimeType: 'video/webm'};
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-          console.log(options.mimeType + ' is not Supported');
-          options = {mimeType: ''};
-        }
-      }
-    }
-    return options
   }
 }

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.4.7",
+    "bluebird": "^3.4.1",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "jquery": "^3.1.0",
@@ -19,8 +20,8 @@
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-router": "^2.6.0",
-    "recordrtc": "^5.3.8",
     "sequelize": "^3.23.4",
+    "shortid": "^2.2.6",
     "webpack": "^1.13.1"
   },
   "devDependencies": {
