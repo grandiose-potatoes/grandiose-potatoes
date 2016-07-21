@@ -10,20 +10,19 @@ export default class App extends React.Component {
 	}
 
 	render() {
-		return (
-			<div>
-				<h1>
-				This is the homepage
-				</h1>
-				<Link to="/record">
-					<h2> Click Me </h2>
-				</Link>
-				<Link to="/videos/asldglaiejga">
-					<h2> Click Me videos </h2>
-				</Link>
+		if (this.props.children) {
+			return (
 				<div>
 					{this.props.children}
-				</div>
+	  		</div>
+			)
+		}
+		return (
+			<div>
+				<h1> This is the homepage </h1>
+				<Link to="/record">
+					<h2> Record Now</h2>
+				</Link>
   		</div>
 		)
 	}

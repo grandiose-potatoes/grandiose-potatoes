@@ -11,39 +11,59 @@
 
 var Sequelize = require('sequelize'); 
 
-var db = new Sequelize('greenfield', 'root', 'io', {
-  host: 'localhost', 
-  dialect: 'mysql'
-})
+//If production use production database
+if (process.env.HEROKU_POSTGRESQL_JADE_URL) {
+  var db = new Sequelize(process.env.HEROKU_POSTGRESQL_JADE_URL, {
+    protocol: 'postgres',
+    dialect: 'postgres',
+    host: process.env.HEROKU_POSTGRESQL_HOST
+  })
+} else {
+  //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
+  var db = new Sequelize('greenfield', null, null, {
+    protocol: 'postgres',
+    dialect: 'postgres',
+    host: 'localhost'
+  })
+}
 
-var User = db.define('user', {
-  username: Sequelize.STRING, 
-  password: Sequelize.STRING,
-  partnerId: Sequelize.INTEGER   
-});
+
+// TODO implement User and User Auth
+// var User = db.define('user', {
+//   username: Sequelize.STRING, 
+//   password: Sequelize.STRING,
+//   partnerId: Sequelize.INTEGER   
+// });
 
 var Video = db.define('video', {
-  url: Sequelize.STRING, 
-  receiverId: Sequelize.INTEGER  
+  //Create a unique alphanumeric id
+  code: Sequelize.STRING,
+  url: Sequelize.STRING
+  //Allow for users to only be viewed by intended receiver
+  // receiverId: Sequelize.INTEGER  
 });
 
-Video.belongsTo(User); 
-User.hasMany(Video);
+
+//Setup User Video relationship
+// Video.belongsTo(User); 
+// User.hasMany(Video);
 
 var Question = db.define('question', {
-  txt: Sequelize.STRING, 
-  receiverId: Sequelize.INTEGER
+  txt: Sequelize.STRING
+  // Allow for certain users to receive specific questions
+  // receiverId: Sequelize.INTEGER 
 });
 
-Question.belongsTo(User); 
-User.hasMany(Question); 
 
-User.sync(); 
+//Allow for users to create questions, setup relationship between user and questions
+// Question.belongsTo(User); 
+// User.hasMany(Question); 
+
+// User.sync(); 
 Video.sync(); 
 Question.sync(); 
 
 module.exports = {
-  User: User, 
   Video: Video, 
   Question: Question
 }

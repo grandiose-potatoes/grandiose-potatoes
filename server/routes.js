@@ -4,12 +4,15 @@ var router = require('express').Router();
 router.get('/api/questions', controller.questions.get);
 router.post('/api/questions', controller.questions.post);
 
+router.get('/api/presigned', controller.videos.presigned)  
 router.get('/api/videos', controller.videos.get);
 router.post('/api/videos', controller.videos.post);
 
-router.post('/api/users/signup', controller.users.post);
-router.get('/api/users/signin', controller.users.get);
+router.get('/videos/*', controller.home.get);
+router.get('/record', controller.home.get);
 
-router.get('*', controller.home.get);
+//TODO
+//Handle unknown routes;
+//router.get(*, errorHandler);
 
 module.exports = router;

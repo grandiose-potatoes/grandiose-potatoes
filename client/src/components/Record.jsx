@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -12,8 +13,17 @@ export default class Record extends React.Component {
       isRec: false,
       blobs: [],
       superBlob: null,
-      recVidUrl: null
+      recVidUrl: null,
+      link: ''
     }
+    //Bind functions to component
+    this.requestUserMedia = this.requestUserMedia.bind(this);
+    this.handleConnect = this.handleConnect.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.toggleRec = this.toggleRec.bind(this);
+    this.handleDataAvailable = this.handleDataAvailable.bind(this);
+    this.playRec = this.playRec.bind(this);
+    this.uploadRec = this.uploadRec.bind(this);
   }
 
   componentDidMount() {
@@ -39,11 +49,12 @@ export default class Record extends React.Component {
         <h1> Record a Video </h1>
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
-          <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
-          <button id="play" onClick={this.playRec.bind(this)}>Play</button>
-          <button id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
+          <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
+          <button id="play" onClick={this.playRec}>Play</button>
+          <button id="upload" onClick={this.uploadRec}>Share</button>
         </div>
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
+        <input value={this.state.link} />
       </div>
     )
   }
@@ -52,7 +63,7 @@ export default class Record extends React.Component {
     //Use native web api for Media Recorder (https://developers.google.com/web/updates/2016/01/mediarecorder)
     //to get the user audio and video
     navigator.mediaDevices.getUserMedia({audio: true, video: true}).
-    then(this.handleConnect.bind(this)).catch(this.handleError);
+    then(this.handleConnect).catch(this.handleError);
   }
 
   handleConnect(stream) {
@@ -78,16 +89,17 @@ export default class Record extends React.Component {
     }
   }
 
-  startRec() {
+  startRec() {  
     //Check browswer and set the supported types to options
-    let options = this.getSupportedTypes()
+    let options = getSupportedTypes()
     //Toggle button text and set recording boolean to true
     //Instantiate MediaRecorder
     let mediaRecorder = new MediaRecorder(this.state.stream, options)
     this.setState({
       toggleRecText: 'Stop Recording',
       isRec: true,
-      mediaRecorder: mediaRecorder
+      mediaRecorder: mediaRecorder,
+      blobs: []
     })
 
     //When data becomes available, call function to handle the data
@@ -124,60 +136,64 @@ export default class Record extends React.Component {
     //Give the video element control buttons
     document.getElementById('recorded').controls = true
     //Allow user to play back recording
+    console.log('the super blob', this.state.superBlob);
     this.setState({
       recVidUrl: window.URL.createObjectURL(this.state.superBlob)
     })
   }
 
+
   uploadRec() {
-    //Post request to the server to get a presigned url from s3
-    //Presigned url allows to post to s3 bucket at a specific endpoint
-    let putObject = this.putObject.bind(this);
-    $.ajax({
-      type: 'POST',
-      url:'/api/videos', // this is our own server 
-      success: function(data) {
-        //Function to put the data to s3 with the preSignedUrl
-        putObject(data.preSignedUrl); 
-      },
-      error: function() {
-        console.log('error getting preSignedUrl');
-      }
+    //Get the pre-signed url from the server, data in promise is in the following format
+    // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
+    let putObjectToS3 = this.putObjectToS3.bind(this);
+    let postVideoUrl = this.postVideoUrl.bind(this);
+
+    getPreSignedUrl()
+    .then((data) => {
+      //Upload data to S3 with pre-signed url
+      return putObjectToS3(data, postVideoUrl)
     })
   }
 
-  putObject(preSignedUrl) {
-    let superBlob = this.state.superBlob;
-    console.log('the superBlob:', superBlob);
+  putObjectToS3(data, callback)  {
     $.ajax({
       type: 'PUT', 
-      data: superBlob, 
-      url: preSignedUrl, 
+      data: this.state.superBlob, 
+      url: data.preSignedUrl, 
       processData: false,
       contentType: 'video/webm', 
-      success: function(data){
-        console.log('object put in S3 ', data);
+      success: function(resp){
+        //If successful, post video url to db
+        callback(data.publicUrl)
       },
       error: function() {
-        console.log('error uploading to s3');
+        return 'error uploading to s3'
       }
     })
   }
 
-  getSupportedTypes() {
-    let options = {mimeType: 'video/webm;codecs=vp9'};
-    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-      console.log(options.mimeType + ' is not Supported');
-      options = {mimeType: 'video/webm;codecs=vp8'};
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        console.log(options.mimeType + ' is not Supported');
-        options = {mimeType: 'video/webm'};
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-          console.log(options.mimeType + ' is not Supported');
-          options = {mimeType: ''};
-        }
-      }
+  postVideoUrl(url) {
+    let setVideoLink = (link) => {
+      this.setState({
+        link: `${window.location.origin}/videos/${link}`
+      })
     }
-    return options
+    //Post to server with publicURL of s3 video
+    let data = {
+      publicUrl: url
+    }
+    $.ajax({
+      type: 'POST', 
+      data: data,
+      url: '/api/videos', 
+      success: function(data){
+        //If successful, post video url to db
+        setVideoLink(data.code)
+      },
+      error: function() {
+        return 'error uploading to s3'
+      }
+    })
   }
 }

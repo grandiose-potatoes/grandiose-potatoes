@@ -1,6 +1,6 @@
 module.exports = {
   entry: [
-    './client/src/index.js'
+    __dirname + '/client/src/index.js'
   ],
   output: {
     path: __dirname + '/client',
@@ -8,7 +8,8 @@ module.exports = {
   },
   module: {
     loaders: [{
-      loader: 'babel',
+      test: /\.jsx?$/,
+      loader: 'babel-loader',
       exclude: /node_modules/,
       query: {
         presets: ['react','es2015']
