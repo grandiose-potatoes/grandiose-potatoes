@@ -10,4 +10,6 @@ router.post('/api/videos', controller.videos.post);
 router.post('/api/users/signup', controller.users.post);
 router.get('/api/users/signin', controller.users.get);
 
+router.get('*', controller.home.get);
+
 module.exports = router;

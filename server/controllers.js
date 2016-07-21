@@ -1,3 +1,4 @@
+var path = require('path');
 var db = require('./db/db');
 var AWS = require('aws-sdk');
 var key = require('./config')
@@ -45,14 +46,24 @@ module.exports = {
     post: function(req,res) {
       // Get pre-signed URL from S3 then send back to client and client will do the PUT request  
       var s3 = new AWS.S3();
-      var params = {Bucket: 'greenfield-hr44', 
-                     Key: 'changeThisAsYourFileName', 
-                     ContentType: 'video/webm',
-                     ACL: 'public-read', 
-                     Expires: 600}; // this is the time which the URL is available for putting file
+      var params = {
+        Bucket: 'greenfield-hr44', 
+        Key: 'changeThisAsYourFileName', 
+        ContentType: 'video/webm',
+        ACL: 'public-read', 
+        Expires: 600
+      }; // this is the time which the URL is available for putting file
+      
       var preSignedUrl = s3.getSignedUrl('putObject', params);
       var publicUrl = 'https://s3.amazonaws.com/'+ params.Bucket +'/' + params.Key;
       res.send({preSignedUrl: preSignedUrl, publicUrl: publicUrl});   
+    }
+  },
+
+  home: {
+    get: function(req, res) {
+      console.log('in the home');
+      res.sendFile(path.resolve(__dirname + '/../client/index.html'));
     }
   }
 
