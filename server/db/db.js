@@ -13,9 +13,10 @@ var Sequelize = require('sequelize');
 
 //If production use production database
 if (process.env.DATABASE_URL) {
-  var db = new Sequelize(process.env.DATABASE_URL, {
-    host: process.env.DATABASE_HOST, 
-    dialect: 'mysql'
+  var db = new Sequelize(process.env.HEROKU_POSTGRESQL_JADE_URL, {
+    protocol: 'postgres',
+    dialect: 'postgres',
+    host: match[3]
   })
 } else {
   //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
