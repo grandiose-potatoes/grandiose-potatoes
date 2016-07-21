@@ -1,12 +1,15 @@
 var db = require('../db/db.js');
 
+
+//return all questions from the database
 var getQuestions = function(req, res) {
   db.Question.findAll().then(function(questions) {
     res.send(questions);
   });
 }
 
-var createQuestions = function(req, res) {
+//Create a question 
+var createQuestion = function(req, res) {
   var question = req.body.txt
   db.Question.create({txt: question})
     .then(function(question) {
@@ -16,6 +19,6 @@ var createQuestions = function(req, res) {
 
 module.exports = {
   getQuestions: getQuestions,
-  createQuestions: createQuestions
+  createQuestion: createQuestion
 }
 

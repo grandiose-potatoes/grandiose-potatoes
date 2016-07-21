@@ -4,14 +4,17 @@ var homeController = require('./controllers/homeController.js');
 var router = require('express').Router();
 
 router.get('/api/questions', questionsController.getQuestions);
-router.post('/api/questions', questionsController.createQuestions);
+router.post('/api/questions', questionsController.createQuestion);
 
-// router.get('/api/presigned', controller.videos.presigned)  
-// router.get('/api/videos', controller.videos.get);
-// router.post('/api/videos', controller.videos.post);
+router.get('/api/presigned', videosController.generatePreSignedUrl)  
+router.get('/api/videos', videosController.getVideo);
+router.post('/api/videos', videosController.createVideo);
 
-// router.get('/videos/*', controller.home.get);
-// router.get('/record', controller.home.get);
+
+//Send homepage when users route to videos or record endpoint
+//React Router will handle showing the appropriate views
+router.get('/videos/*', homeController.sendHome);
+router.get('/record', homeController.sendHome);
 
 //TODO
 //Handle unknown routes;
