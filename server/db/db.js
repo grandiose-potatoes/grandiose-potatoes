@@ -11,11 +11,19 @@
 
 var Sequelize = require('sequelize'); 
 
-//Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
-var db = new Sequelize('greenfield', 'root', 'io', {
-  host: 'localhost', 
-  dialect: 'mysql'
-})
+//If production use production database
+if (process.env.DATABASE_URL) {
+  var db = new Sequelize(process.env.DATABASE_URL, {
+    host: match[3], 
+    dialect: 'mysql'
+  })
+} else {
+  //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
+  var db = new Sequelize('greenfield', 'root', 'io', {
+    host: 'localhost', 
+    dialect: 'mysql'
+  })
+}
 
 
 // TODO implement User and User Auth
