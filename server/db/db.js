@@ -14,7 +14,7 @@ var Sequelize = require('sequelize');
 //If production use production database
 if (process.env.DATABASE_URL) {
   var db = new Sequelize(process.env.DATABASE_URL, {
-    host: match[3], 
+    host: process.env.DATABASE_HOST, 
     dialect: 'mysql'
   })
 } else {
