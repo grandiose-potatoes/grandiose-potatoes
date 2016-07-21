@@ -1,8 +1,8 @@
 var path = require('path');
 var db = require('./db/db');
 var AWS = require('aws-sdk');
-var key = require('./config')
-AWS.config.update({accessKeyId: key.accessKeyId, secretAccessKey: key.secretAccessKey});
+require('dotenv').config();
+AWS.config.update({accessKeyId: process.env.ACCESS_KEY_ID, secretAccessKey: process.env.SECRET_ACCESS_KEY});
 AWS.config.update({region: 'us-east-1'});
 var shortid = require('shortid');
 
