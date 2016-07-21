@@ -30,15 +30,20 @@ export default class Record extends React.Component {
 
   componentDidMount() {
 
-
+    //function to randomize and then set an array into the state
     var setQuestions = function(questionsArr){
-      // randomized the questionsArr later 
-      this.setState({allQuestions: questionsArr, currentQuestion: questionsArr[0].txt}); 
-      console.log(this.state.allQuestions); 
-      console.log(this.state.currentQuestion); 
+      //randomize the input array of questions
+      questionsArr = _.shuffle(questionsArr);
+
+      this.setState({
+        allQuestions: questionsArr,
+        currentQuestion: questionsArr[0].txt
+      });
+
     }.bind(this); 
     
-    // AJAX GET 
+    // AJAX get request to get the questions inside of the database
+    //then we call setQuestions function to randomize
     $.ajax({
       type: 'GET', 
       url: '/api/questions', 
@@ -47,20 +52,7 @@ export default class Record extends React.Component {
       }
     })
 
-    // var getQuestion = function(txt) {
-    //   this.setState({
-    //     question: txt
-    //   })
-    // }.bind(this);
-
-    // $.ajax({
-    //   method: 'GET',
-    //   url: '/api/questions',
-    //   success: function(data) {
-    //     getQuestion(data[0].txt);
-    //   }
-    // })
-    this.requestUserMedia()
+    this.requestUserMedia();
   }
   render() {
     return (
