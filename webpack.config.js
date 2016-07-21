@@ -1,6 +1,6 @@
 module.exports = {
   entry: [
-    './client/src/index.js'
+    __dirname + '/client/src/index.js'
   ],
   output: {
     path: __dirname + '/client',
