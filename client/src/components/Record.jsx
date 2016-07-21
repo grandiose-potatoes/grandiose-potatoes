@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
+import {Questions} from './Questions.jsx'
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -26,6 +27,7 @@ export default class Record extends React.Component {
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.playRec = this.playRec.bind(this);
     this.uploadRec = this.uploadRec.bind(this);
+    this.nextQuestion = this.nextQuestion.bind(this);
   }
 
   componentDidMount() {
@@ -36,9 +38,12 @@ export default class Record extends React.Component {
       questionsArr = _.shuffle(questionsArr);
 
       this.setState({
-        allQuestions: questionsArr,
-        currentQuestion: questionsArr[0].txt
+        currentQuestion: 'Start recording!',
+        allQuestions: questionsArr
       });
+
+      console.log("this is the questions array: ", this.state.allQuestions);
+      console.log(this.state.currentQuestion);
 
     }.bind(this); 
     
@@ -64,6 +69,12 @@ export default class Record extends React.Component {
           <button id="play" onClick={this.playRec}>Play</button>
           <button id="upload" onClick={this.uploadRec}>Share</button>
         </div>
+  
+        <div>
+          <Questions question={this.state.currentQuestion}/>
+           <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+        </div>
+
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
         <input value={this.state.link} />
       </div>
@@ -219,4 +230,13 @@ export default class Record extends React.Component {
       }
     })
   }
+
+  //function for when a user clicks for a next question
+  nextQuestion() {
+    this.setState({
+      currentQuestion: this.state.allQuestions.shift().txt,
+      allQuestions: this.state.allQuestions
+    });
+  }
+
 }

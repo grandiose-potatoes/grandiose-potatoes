@@ -1,7 +1,8 @@
 import React from 'react';
-export var Questions = function (props) {
+export let Questions = function (props) {
   return (
     <div>
+      <h1>{props.question}</h1>
     </div>
   )
   
