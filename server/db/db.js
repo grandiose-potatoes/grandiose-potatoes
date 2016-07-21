@@ -16,7 +16,7 @@ if (process.env.HEROKU_POSTGRESQL_JADE_URL) {
   var db = new Sequelize(process.env.HEROKU_POSTGRESQL_JADE_URL, {
     protocol: 'postgres',
     dialect: 'postgres',
-    host: match[3]
+    host: process.env.HEROKU_POSTGRESQL_HOST
   })
 } else {
   //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
