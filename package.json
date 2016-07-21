@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config ./webpack.config.js",
+    "build": "webpack --config --watch -d ./webpack.config.js",
     "postinstall": "cp ./node_modules/webrtc-adapter/out/adapter.js ./client/src && npm run build"
   },
   "author": "",

@@ -20,9 +20,10 @@ if (process.env.HEROKU_POSTGRESQL_JADE_URL) {
   })
 } else {
   //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
-  var db = new Sequelize('greenfield', 'root', 'io', {
-    host: 'localhost', 
-    dialect: 'mysql'
+  var db = new Sequelize('greenfield', null, null, {
+    protocol: 'postgres',
+    dialect: 'postgres',
+    host: 'localhost'
   })
 }
 
