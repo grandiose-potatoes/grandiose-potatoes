@@ -13,42 +13,6 @@ export let getPreSignedUrl = () => {
   })
 }
 
-// export let putObjectToS3 = (data, callback) => {
-//   $.ajax({
-//     type: 'PUT', 
-//     data: data.superBlob, 
-//     url: data.preSignedUrl, 
-//     processData: false,
-//     contentType: 'video/webm', 
-//     success: function(resp){
-//       //If successful, post video url to db
-//       callback(data.publicUrl)
-//     },
-//     error: function() {
-//       return 'error uploading to s3'
-//     }
-//   })
-// }
-
-// export let postVideoUrl = (url) => {
-//   //Post to server with publicURL of s3 video
-//   let data = {
-//     publicURL: url
-//   }
-//   $.ajax({
-//     type: 'POST', 
-//     data: data,
-//     url: '/api/videos', 
-//     success: function(data){
-//       //If successful, post video url to db
-//       console.log(data)
-//     },
-//     error: function() {
-//       return 'error uploading to s3'
-//     }
-//   })
-// }
-
 export let getSupportedTypes = () => {
   let options = {mimeType: 'video/webm;codecs=vp9'};
   if (!MediaRecorder.isTypeSupported(options.mimeType)) {

@@ -152,27 +152,39 @@ export default class Record extends React.Component {
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
-      return putObjectToS3(data, postVideoUrl)
+      return putObjectToS3(data)
+    })
+    .then((videoData) => {
+      console.log('in the promise then:', videoData)
+      postVideoUrl(videoData.publicUrl)
     })
   }
 
-  putObjectToS3(data, callback)  {
-    $.ajax({
-      type: 'PUT', 
-      data: this.state.superBlob, 
-      url: data.preSignedUrl, 
-      processData: false,
-      contentType: 'video/webm', 
-      success: function(resp){
-        //If successful, post video url to db
-        callback(data.publicUrl)
-      },
-      error: function() {
-        return 'error uploading to s3'
-      }
+
+  //Promise that returns result of ajax request
+  putObjectToS3(data)  {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        type: 'PUT', 
+        data: this.state.superBlob, 
+        url: data.preSignedUrl, 
+        processData: false,
+        contentType: 'video/webm', 
+        success: function(resp){
+          //If successful, post video url to db
+          resolve(data)
+        },
+        error: function() {
+          reject('error uploading to s3');
+        }
+      })
     })
   }
 
+
+  //Function that is invoked after success of saving video to aws s3
+  //Posts video public url to server to be saved
+  //If post successfull server will respond with share code for video
   postVideoUrl(url) {
     let setVideoLink = (link) => {
       this.setState({
