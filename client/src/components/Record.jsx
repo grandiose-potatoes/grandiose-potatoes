@@ -79,7 +79,6 @@ export default class Record extends React.Component {
   }
 
   startRec() {
-    console.log(this);
     //Check browswer and set the supported types to options
     let options = this.getSupportedTypes()
     //Toggle button text and set recording boolean to true
@@ -116,8 +115,8 @@ export default class Record extends React.Component {
     let superBlob = new Blob(this.state.blobs, options)
     this.setState({
       toggleRecText: 'Start Recording',
-      superBlob: superBlob,
-      isRec: false
+      isRec: false,
+      superBlob: superBlob
     })
   }
 
@@ -126,7 +125,6 @@ export default class Record extends React.Component {
     document.getElementById('recorded').controls = true
     //Allow user to play back recording
     this.setState({
-      videoControls: true,
       recVidUrl: window.URL.createObjectURL(this.state.superBlob)
     })
   }
