@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { getPreSignedUrl, getSupportedTypes, postVideoUrl, putObjectToS3 } from '../recordUtil.js';
+import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -13,7 +13,8 @@ export default class Record extends React.Component {
       isRec: false,
       blobs: [],
       superBlob: null,
-      recVidUrl: null
+      recVidUrl: null,
+      link: ''
     }
     //Bind functions to component
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -53,6 +54,7 @@ export default class Record extends React.Component {
           <button id="upload" onClick={this.uploadRec}>Share</button>
         </div>
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
+        <input value={this.state.link} />
       </div>
     )
   }
@@ -144,10 +146,54 @@ export default class Record extends React.Component {
   uploadRec() {
     //Get the pre-signed url from the server, data in promise is in the following format
     // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
-    getPreSignedUrl(this.state.superBlob)
+    let putObjectToS3 = this.putObjectToS3.bind(this);
+    let postVideoUrl = this.postVideoUrl.bind(this);
+
+    getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
       return putObjectToS3(data, postVideoUrl)
+    })
+  }
+
+  putObjectToS3(data, callback)  {
+    $.ajax({
+      type: 'PUT', 
+      data: this.state.superBlob, 
+      url: data.preSignedUrl, 
+      processData: false,
+      contentType: 'video/webm', 
+      success: function(resp){
+        //If successful, post video url to db
+        callback(data.publicUrl)
+      },
+      error: function() {
+        return 'error uploading to s3'
+      }
+    })
+  }
+
+  postVideoUrl(url) {
+    let setVideoLink = (link) => {
+      this.setState({
+        link: `${window.location.origin}/videos/${link}`
+      })
+    }
+    //Post to server with publicURL of s3 video
+    let data = {
+      publicUrl: url
+    }
+    $.ajax({
+      type: 'POST', 
+      data: data,
+      url: '/api/videos', 
+      success: function(data){
+        //If successful, post video url to db
+        setVideoLink(data.code)
+      },
+      error: function() {
+        return 'error uploading to s3'
+      }
     })
   }
 }

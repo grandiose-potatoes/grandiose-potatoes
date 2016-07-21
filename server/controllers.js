@@ -28,24 +28,32 @@ module.exports = {
       })
     }
   },
-
-  users: {
-    get: function(req, res) {
-      //user validation
-    },
-    post: function(req, res) {
-      //check if username already exists
-        //if so send respond to client to type new username
-      //else
-        //create new userObject, hash password, etc.
-        //write to database
-    }
-  },
   
   videos: {
-    get: function(req, res) {},
+    get: function(req, res) {
+      console.log('in the get');
+      console.log(req.query);
+      var code = req.query.code
+      db.Video.findOne({ 
+        where: { code: code } 
+      }).then(function(video) {
+        res.send(video);
+      })
+    },
     post: function(req,res) {
-       console.log('in the post');
+      var url = req.body.publicUrl;
+      var code = shortid.generate();
+      db.Video.create({
+        url: url,
+        code: code
+      })
+      .then(function(video) {
+        console.log('created video:', video)
+        res.send({
+          success: 'video created',
+          code: video.code
+        });
+      })
     },
     presigned: function(req, res) {
       //Generate unique filename for video
@@ -72,6 +80,7 @@ module.exports = {
   },
 
   home: {
+    //Send static index for all uncaught routes
     get: function(req, res) {
       console.log('in the home');
       res.sendFile(path.resolve(__dirname + '/../client/index.html'));
