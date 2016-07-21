@@ -12,7 +12,7 @@
 var Sequelize = require('sequelize'); 
 
 //If production use production database
-if (process.env.DATABASE_URL) {
+if (process.env.HEROKU_POSTGRESQL_JADE_URL) {
   var db = new Sequelize(process.env.HEROKU_POSTGRESQL_JADE_URL, {
     protocol: 'postgres',
     dialect: 'postgres',
