@@ -10,6 +10,7 @@ export default class VideoPlayer extends React.Component {
   componentDidMount() {
     console.log('the params:', this.props.params.id)
     this.getVideo(this.props.params.id)
+
   }
 
   render() {

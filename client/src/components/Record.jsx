@@ -14,7 +14,9 @@ export default class Record extends React.Component {
       blobs: [],
       superBlob: null,
       recVidUrl: null,
-      link: ''
+      link: '', 
+      allQuestions: null,  // or []????
+      currentQuestion: null
     }
     //Bind functions to component
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -27,6 +29,23 @@ export default class Record extends React.Component {
   }
 
   componentDidMount() {
+
+
+    var setQuestions = function(questionsArr){
+      // randomized the questionsArr later 
+      this.setState({allQuestions: questionsArr, currentQuestion: questionsArr[0].txt}); 
+      console.log(this.state.allQuestions); 
+      console.log(this.state.currentQuestion); 
+    }.bind(this); 
+    
+    // AJAX GET 
+    $.ajax({
+      type: 'GET', 
+      url: '/api/questions', 
+      success: function(data){
+        setQuestions(data); 
+      }
+    })
 
     // var getQuestion = function(txt) {
     //   this.setState({
