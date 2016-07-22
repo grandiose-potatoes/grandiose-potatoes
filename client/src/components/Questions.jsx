@@ -1,4 +1,5 @@
 import React from 'react';
+
 export let Questions = function (props) {
   return (
     <div>
@@ -6,5 +7,4 @@ export let Questions = function (props) {
       <p>{props.question}</p>
     </div>
   );
-  
 };

@@ -34,7 +34,7 @@ export default class VideoPlayer extends React.Component {
       url: '/api/videos',
       data: {code: code},
       success: function(data) {
-        console.log('the datat is:', data);
+        console.log('the data is:', data);
         setVideoData(data);
       },
       error: function(err) {
