@@ -18,7 +18,7 @@ export default class VideoPlayer extends React.Component {
       <div>
         <h1>Video</h1>
         <video controls src={this.state.videoUrl}/>
-      </div>  
+      </div>
     )
   }
 
