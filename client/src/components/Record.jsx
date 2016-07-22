@@ -37,19 +37,14 @@ export default class Record extends React.Component {
   componentDidMount() {
 
     //function to randomize and then set an array into the state
-    var setQuestions = function(questionsArr){
-      //randomize the input array of questions
+    let setQuestions = (questionArr) => {
       questionsArr = _.shuffle(questionsArr);
 
       this.setState({
         currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
       });
-
-      console.log("this is the questions array: ", this.state.allQuestions);
-      console.log(this.state.currentQuestion);
-
-    }.bind(this); 
+    };
     
     // AJAX get request to get the questions inside of the database
     //then we call setQuestions function to randomize
@@ -109,14 +104,9 @@ export default class Record extends React.Component {
 
   toggleRec() {
     if (this.state.isRec) {
-      this.stopRec()
+      this.stopRec();
     } else {
-      this.startRec()
-      
-      //make it so buttons appear
-      this.setState({
-        shouldHide: false
-      });
+      this.startRec();
     }
   }
 
@@ -131,7 +121,8 @@ export default class Record extends React.Component {
       isRec: true,
       mediaRecorder: mediaRecorder,
       blobs: [],
-      postStop: true
+      postStop: true,
+      shouldHide: false
     })
 
     //When data becomes available, call function to handle the data
@@ -188,11 +179,11 @@ export default class Record extends React.Component {
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
-      return putObjectToS3(data)
+      return putObjectToS3(data);
     })
     .then((videoData) => {
-      console.log('in the promise then:', videoData)
-      postVideoUrl(videoData.publicUrl)
+      console.log('in the promise then:', videoData);
+      postVideoUrl(videoData.publicUrl);
     })
   }
 
@@ -208,7 +199,7 @@ export default class Record extends React.Component {
         contentType: 'video/webm', 
         success: function(resp){
           //If successful, post video url to db
-          resolve(data)
+          resolve(data);
         },
         error: function() {
           reject('error uploading to s3');
@@ -237,7 +228,7 @@ export default class Record extends React.Component {
       url: '/api/videos', 
       success: function(data){
         //If successful, post video url to db
-        setVideoLink(data.code)
+        setVideoLink(data.code);
       },
       error: function() {
         return 'error uploading to s3'
