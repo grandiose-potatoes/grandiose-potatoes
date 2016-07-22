@@ -6,7 +6,7 @@ var router = require('express').Router();
 router.get('/api/questions', questionsController.getQuestions);
 router.post('/api/questions', questionsController.createQuestion);
 
-router.get('/api/presigned', videosController.generatePreSignedUrl)  
+router.get('/api/presigned', videosController.generatePreSignedUrl);
 router.get('/api/videos', videosController.getVideo);
 router.post('/api/videos', videosController.createVideo);
 

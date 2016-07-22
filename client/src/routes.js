@@ -9,4 +9,4 @@ export default (
     <Route path="record" component={Record}/>
     <Route path="videos/:id" component={VideoPlayer}/>
   </Route>
-)
+);

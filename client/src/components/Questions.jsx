@@ -5,6 +5,6 @@ export let Questions = function (props) {
       <h2>Question for you to talk about:</h2>
       <p>{props.question}</p>
     </div>
-  )
+  );
   
 };

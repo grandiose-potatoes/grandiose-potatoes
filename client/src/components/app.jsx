@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 import React from 'react';
-import {Link} from 'react-router'
+import {Link} from 'react-router';
 import $ from 'jquery';
 
 
@@ -15,7 +15,7 @@ export default class App extends React.Component {
 				<div>
 					{this.props.children}
 	  		</div>
-			)
+			);
 		}
 		return (
 			<div>
@@ -24,7 +24,7 @@ export default class App extends React.Component {
 					<h2> Record Now</h2>
 				</Link>
   		</div>
-		)
+		);
 	}
 
 }
