@@ -2,7 +2,8 @@ import React from 'react';
 export let Questions = function (props) {
   return (
     <div>
-      <h1>{props.question}</h1>
+      <h2>Question for you to talk about:</h2>
+      <p>{props.question}</p>
     </div>
   )
   

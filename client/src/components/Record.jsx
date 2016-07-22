@@ -16,8 +16,12 @@ export default class Record extends React.Component {
       superBlob: null,
       recVidUrl: null,
       link: '', 
-      allQuestions: null,  // or []????
-      currentQuestion: null
+      allQuestions: null,
+      currentQuestion: null,
+
+      //state so some buttons start hidden
+      shouldHide: true,
+      postStop: true
     }
     //Bind functions to component
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -38,7 +42,7 @@ export default class Record extends React.Component {
       questionsArr = _.shuffle(questionsArr);
 
       this.setState({
-        currentQuestion: 'Start recording!',
+        currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
       });
 
@@ -66,13 +70,13 @@ export default class Record extends React.Component {
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
           <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
-          <button id="play" onClick={this.playRec}>Play</button>
-          <button id="upload" onClick={this.uploadRec}>Share</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
         </div>
-  
-        <div>
+       
+        <div className={this.state.shouldHide ? 'hidden' : ''}>
           <Questions question={this.state.currentQuestion}/>
-           <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+          <button id="next" onClick={this.nextQuestion}>How about another question?</button>
         </div>
 
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
@@ -108,6 +112,11 @@ export default class Record extends React.Component {
       this.stopRec()
     } else {
       this.startRec()
+      
+      //make it so buttons appear
+      this.setState({
+        shouldHide: false
+      });
     }
   }
 
@@ -121,12 +130,16 @@ export default class Record extends React.Component {
       toggleRecText: 'Stop Recording',
       isRec: true,
       mediaRecorder: mediaRecorder,
-      blobs: []
+      blobs: [],
+      postStop: true
     })
 
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
+
+    // Only append next question after start recording 
+
   }
 
   handleDataAvailable(event) {
@@ -150,7 +163,8 @@ export default class Record extends React.Component {
     this.setState({
       toggleRecText: 'Start Recording',
       isRec: false,
-      superBlob: superBlob
+      superBlob: superBlob,
+      postStop: false
     })
   }
 
@@ -233,10 +247,16 @@ export default class Record extends React.Component {
 
   //function for when a user clicks for a next question
   nextQuestion() {
-    this.setState({
-      currentQuestion: this.state.allQuestions.shift().txt,
-      allQuestions: this.state.allQuestions
-    });
+    if (this.state.allQuestions.length > 0) {
+      this.setState({
+        currentQuestion: this.state.allQuestions.shift().txt,
+        allQuestions: this.state.allQuestions
+      });
+    } else {
+      this.setState({
+        currentQuestion: 'Tentatively there are no more questions!'
+      })
+    }
   }
 
 }
