@@ -19,7 +19,9 @@ export default class Record extends React.Component {
       allQuestions: null,
       currentQuestion: null,
       //state for some of the buttons to start hidden
+      //shouldHide affects the Play/Share buttons
       shouldHide: true,
+      //postStop affects the "Questions" component. May need to be renamed.
       postStop: true
     };
     //Bind functions to component
@@ -35,8 +37,10 @@ export default class Record extends React.Component {
 
   componentDidMount() {
 
-    //function to randomize and then set an array into the state
+    //function to randomize and then set an array of questions into the state
+    //these questions are pulled from the database
     let setQuestions = (questionArr) => {
+
       questionsArr = _.shuffle(questionsArr);
 
       //set the state after randomizing the array
@@ -46,8 +50,8 @@ export default class Record extends React.Component {
       });
     };
     
-    // AJAX get request to get the questions inside of the database
-    //then we call setQuestions function to randomize
+    //AJAX get request to get the questions inside of the database
+    //then we call setQuestions function inside of success to continue randomizing the array and then set the state
     $.ajax({
       type: 'GET', 
       url: '/api/questions', 
@@ -236,15 +240,16 @@ export default class Record extends React.Component {
     });
   }
 
-  //function for when a user clicks for a next question
+  //function for when a user clicks the next button, they receive another question
   nextQuestion() {
+    //this if statement implies that there is at least 1 question
     if (this.state.allQuestions.length > 0) {
       this.setState({
         currentQuestion: this.state.allQuestions.shift().txt,
         allQuestions: this.state.allQuestions
       });
     } else {
-      //if there are no more questions in the array
+      //if there are no more questions in the array, tell this to the user.
       this.setState({
         currentQuestion: 'Tentatively there are no more questions!'
       });
