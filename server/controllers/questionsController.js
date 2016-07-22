@@ -4,6 +4,7 @@ var db = require('../db/db.js');
 //return all questions from the database
 var getQuestions = function(req, res) {
   db.Question.findAll().then(function(questions) {
+    //console.log(questions[0].dataValues.txt);
     res.send(questions);
   });
 }

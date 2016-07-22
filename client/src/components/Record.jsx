@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
+import {Questions} from './Questions.jsx'
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -14,7 +15,13 @@ export default class Record extends React.Component {
       blobs: [],
       superBlob: null,
       recVidUrl: null,
-      link: ''
+      link: '', 
+      allQuestions: null,
+      currentQuestion: null,
+
+      //state so some buttons start hidden
+      shouldHide: true,
+      postStop: true
     }
     //Bind functions to component
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -24,24 +31,32 @@ export default class Record extends React.Component {
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.playRec = this.playRec.bind(this);
     this.uploadRec = this.uploadRec.bind(this);
+    this.nextQuestion = this.nextQuestion.bind(this);
   }
 
   componentDidMount() {
 
-    // var getQuestion = function(txt) {
-    //   this.setState({
-    //     question: txt
-    //   })
-    // }.bind(this);
+    //function to randomize and then set an array into the state
+    let setQuestions = (questionArr) => {
+      questionsArr = _.shuffle(questionsArr);
 
-    // $.ajax({
-    //   method: 'GET',
-    //   url: '/api/questions',
-    //   success: function(data) {
-    //     getQuestion(data[0].txt);
-    //   }
-    // })
-    this.requestUserMedia()
+      this.setState({
+        currentQuestion: questionsArr.shift().txt,
+        allQuestions: questionsArr
+      });
+    };
+    
+    // AJAX get request to get the questions inside of the database
+    //then we call setQuestions function to randomize
+    $.ajax({
+      type: 'GET', 
+      url: '/api/questions', 
+      success: function(data){
+        setQuestions(data); 
+      }
+    })
+
+    this.requestUserMedia();
   }
   render() {
     return (
@@ -50,9 +65,15 @@ export default class Record extends React.Component {
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
           <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
-          <button id="play" onClick={this.playRec}>Play</button>
-          <button id="upload" onClick={this.uploadRec}>Share</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
         </div>
+       
+        <div className={this.state.shouldHide ? 'hidden' : ''}>
+          <Questions question={this.state.currentQuestion}/>
+          <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+        </div>
+
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
         <input value={this.state.link} />
       </div>
@@ -83,9 +104,9 @@ export default class Record extends React.Component {
 
   toggleRec() {
     if (this.state.isRec) {
-      this.stopRec()
+      this.stopRec();
     } else {
-      this.startRec()
+      this.startRec();
     }
   }
 
@@ -99,12 +120,17 @@ export default class Record extends React.Component {
       toggleRecText: 'Stop Recording',
       isRec: true,
       mediaRecorder: mediaRecorder,
-      blobs: []
+      blobs: [],
+      postStop: true,
+      shouldHide: false
     })
 
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
+
+    // Only append next question after start recording 
+
   }
 
   handleDataAvailable(event) {
@@ -128,7 +154,8 @@ export default class Record extends React.Component {
     this.setState({
       toggleRecText: 'Start Recording',
       isRec: false,
-      superBlob: superBlob
+      superBlob: superBlob,
+      postStop: false
     })
   }
 
@@ -152,11 +179,11 @@ export default class Record extends React.Component {
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
-      return putObjectToS3(data)
+      return putObjectToS3(data);
     })
     .then((videoData) => {
-      console.log('in the promise then:', videoData)
-      postVideoUrl(videoData.publicUrl)
+      console.log('in the promise then:', videoData);
+      postVideoUrl(videoData.publicUrl);
     })
   }
 
@@ -172,7 +199,7 @@ export default class Record extends React.Component {
         contentType: 'video/webm', 
         success: function(resp){
           //If successful, post video url to db
-          resolve(data)
+          resolve(data);
         },
         error: function() {
           reject('error uploading to s3');
@@ -201,11 +228,26 @@ export default class Record extends React.Component {
       url: '/api/videos', 
       success: function(data){
         //If successful, post video url to db
-        setVideoLink(data.code)
+        setVideoLink(data.code);
       },
       error: function() {
         return 'error uploading to s3'
       }
     })
   }
+
+  //function for when a user clicks for a next question
+  nextQuestion() {
+    if (this.state.allQuestions.length > 0) {
+      this.setState({
+        currentQuestion: this.state.allQuestions.shift().txt,
+        allQuestions: this.state.allQuestions
+      });
+    } else {
+      this.setState({
+        currentQuestion: 'Tentatively there are no more questions!'
+      })
+    }
+  }
+
 }
