@@ -104,9 +104,7 @@ export default class Record extends React.Component {
     let options = getSupportedTypes();
     //Toggle button text and set recording boolean to true
     //Instantiate MediaRecorder
-    console.log('the options:', options)
     let mediaRecorder = new MediaRecorder(this.state.stream, options);
-    console.log('the mediarecorder:', mediaRecorder);
     this.setState({
       toggleRecText: 'Stop Recording',
       isRec: true,
@@ -125,7 +123,6 @@ export default class Record extends React.Component {
   }
 
   handleDataAvailable(event) {
-    console.log('the data:', event)
     //If there is data add the data to the blobs array
     if (event.data && event.data.size > 0) {
       this.setState({
