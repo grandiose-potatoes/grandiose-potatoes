@@ -124,6 +124,7 @@ export default class Record extends React.Component {
   }
 
   handleDataAvailable(event) {
+    console.log('the data:', event)
     //If there is data add the data to the blobs array
     if (event.data && event.data.size > 0) {
       this.setState({
