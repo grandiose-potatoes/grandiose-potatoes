@@ -25,9 +25,6 @@ export default class Record extends React.Component {
       postStop: true
     };
     //Bind functions to component
-    this.requestUserMedia = this.requestUserMedia.bind(this);
-    this.handleConnect = this.handleConnect.bind(this);
-    this.handleError = this.handleError.bind(this);
     this.toggleRec = this.toggleRec.bind(this);
     this.handleDataAvailable = this.handleDataAvailable.bind(this);
     this.playRec = this.playRec.bind(this);
@@ -36,16 +33,9 @@ export default class Record extends React.Component {
   }
   componentDidMount() {
 
-    getQuestions((questionsArr) => {
-      questionsArr = _.shuffle(questionsArr);
-      console.log('This is the questionsArr: ', questionsArr);
-      this.setState({
-        currentQuestion: questionsArr.shift().txt,
-        allQuestions: questionsArr
-      });
-    });
-
+    this.setInitialQuestions()
     this.requestUserMedia();
+
   }
 
   render() {
@@ -70,11 +60,25 @@ export default class Record extends React.Component {
     );
   }
 
+  setInitialQuestions() {
+    getQuestions((questionsArr) => {
+      questionsArr = _.shuffle(questionsArr);
+      console.log('This is the questionsArr: ', questionsArr);
+      this.setState({
+        currentQuestion: questionsArr.shift().txt,
+        allQuestions: questionsArr
+      });
+    });
+  }
+
   requestUserMedia() {
     //Use native web api for Media Recorder (https://developers.google.com/web/updates/2016/01/mediarecorder)
     //to get the user audio and video
-    navigator.mediaDevices.getUserMedia({audio: true, video: true}).
-    then(this.handleConnect).catch(this.handleError);
+    navigator.mediaDevices.getUserMedia({audio: true, video: true})
+    .then((stream) => {
+      this.handleConnect(stream);
+    })
+    .catch(this.handleError);
   }
 
   handleConnect(stream) {
@@ -126,7 +130,6 @@ export default class Record extends React.Component {
   }
 
   handleDataAvailable(event) {
-    console.log('the data:', event)
     //If there is data add the data to the blobs array
     if (event.data && event.data.size > 0) {
       this.setState({
