@@ -63,6 +63,9 @@ export default class Record extends React.Component {
         currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
       });
+    })
+    .catch((err) => {
+      throw err;
     });
   }
 
@@ -175,6 +178,9 @@ export default class Record extends React.Component {
       this.setState({
         link: `${window.location.origin}/videos/${code}`
       });
+    })
+    .catch((err) => {
+      throw err;
     });
   }
 
