@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { getPreSignedUrl, getSupportedTypes, getQuestions } from '../recordUtil.js';
+import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 import {Questions} from './Questions.jsx';
 export default class Record extends React.Component {
 
@@ -24,28 +24,12 @@ export default class Record extends React.Component {
       //postStop affects the "Questions" component. May need to be renamed.
       postStop: true
     };
-    //Bind functions to component
-    this.requestUserMedia = this.requestUserMedia.bind(this);
-    this.handleConnect = this.handleConnect.bind(this);
-    this.handleError = this.handleError.bind(this);
-    this.toggleRec = this.toggleRec.bind(this);
-    this.handleDataAvailable = this.handleDataAvailable.bind(this);
-    this.playRec = this.playRec.bind(this);
-    this.uploadRec = this.uploadRec.bind(this);
-    this.nextQuestion = this.nextQuestion.bind(this);
   }
   componentDidMount() {
 
-    getQuestions((questionsArr) => {
-      questionsArr = _.shuffle(questionsArr);
-      console.log('This is the questionsArr: ', questionsArr);
-      this.setState({
-        currentQuestion: questionsArr.shift().txt,
-        allQuestions: questionsArr
-      });
-    });
-
+    this.setInitialQuestions()
     this.requestUserMedia();
+
   }
 
   render() {
@@ -54,14 +38,14 @@ export default class Record extends React.Component {
         <h1> Record a Video </h1>
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
-          <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
+          <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec.bind(this)}>Play</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
         </div>
        
         <div className={this.state.shouldHide ? 'hidden' : ''}>
           <Questions question={this.state.currentQuestion}/>
-          <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+          <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
         </div>
 
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
@@ -70,11 +54,29 @@ export default class Record extends React.Component {
     );
   }
 
+  setInitialQuestions() {
+    getQuestions()
+    .then((questionsArr) => {
+      questionsArr = _.shuffle(questionsArr);
+      console.log('This is the questionsArr: ', questionsArr);
+      this.setState({
+        currentQuestion: questionsArr.shift().txt,
+        allQuestions: questionsArr
+      });
+    })
+    .catch((err) => {
+      throw err;
+    });
+  }
+
   requestUserMedia() {
     //Use native web api for Media Recorder (https://developers.google.com/web/updates/2016/01/mediarecorder)
     //to get the user audio and video
-    navigator.mediaDevices.getUserMedia({audio: true, video: true}).
-    then(this.handleConnect).catch(this.handleError);
+    navigator.mediaDevices.getUserMedia({audio: true, video: true})
+    .then((stream) => {
+      this.handleConnect(stream);
+    })
+    .catch(this.handleError);
   }
 
   handleConnect(stream) {
@@ -163,66 +165,22 @@ export default class Record extends React.Component {
   uploadRec() {
     //Get the pre-signed url from the server, data in promise is in the following format
     // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
-    let putObjectToS3 = this.putObjectToS3.bind(this);
-    let postVideoUrl = this.postVideoUrl.bind(this);
-
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
+      data.superBlob = this.state.superBlob;
       return putObjectToS3(data);
     })
     .then((videoData) => {
-      console.log('in the promise then:', videoData);
-      postVideoUrl(videoData.publicUrl);
-    });
-  }
-
-
-  //Promise that returns result of ajax request
-  putObjectToS3(data) {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        type: 'PUT', 
-        data: this.state.superBlob, 
-        url: data.preSignedUrl, 
-        processData: false,
-        contentType: 'video/webm', 
-        success: function(resp) {
-          //If successful, post video url to db
-          resolve(data);
-        },
-        error: function() {
-          reject('error uploading to s3');
-        }
-      });
-    });
-  }
-
-
-  //Function that is invoked after success of saving video to aws s3
-  //Posts video public url to server to be saved
-  //If post successfull server will respond with share code for video
-  postVideoUrl(url) {
-    let setVideoLink = (link) => {
+      return postVideoUrl(videoData.publicUrl);
+    })
+    .then((code) => {
       this.setState({
-        link: `${window.location.origin}/videos/${link}`
+        link: `${window.location.origin}/videos/${code}`
       });
-    };
-    //Post to server with publicURL of s3 video
-    let data = {
-      publicUrl: url
-    };
-    $.ajax({
-      type: 'POST', 
-      data: data,
-      url: '/api/videos', 
-      success: function(data) {
-        //If successful, post video url to db
-        setVideoLink(data.code);
-      },
-      error: function() {
-        return 'error uploading to s3';
-      }
+    })
+    .catch((err) => {
+      throw err;
     });
   }
 
