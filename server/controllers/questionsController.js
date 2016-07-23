@@ -7,19 +7,19 @@ var getQuestions = function(req, res) {
     //console.log(questions[0].dataValues.txt);
     res.send(questions);
   });
-}
+};
 
 //Create a question 
 var createQuestion = function(req, res) {
-  var question = req.body.txt
+  var question = req.body.txt;
   db.Question.create({txt: question})
     .then(function(question) {
-    res.end();
-  })
-}
+      res.end();
+    });
+};
 
 module.exports = {
   getQuestions: getQuestions,
   createQuestion: createQuestion
-}
+};
 

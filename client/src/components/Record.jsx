@@ -1,11 +1,11 @@
 'use strict';
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
-import {Questions} from './Questions.jsx'
+import {Questions} from './Questions.jsx';
 export default class Record extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       mediaRecorder: null,
       stream: null,
@@ -18,11 +18,12 @@ export default class Record extends React.Component {
       link: '', 
       allQuestions: null,
       currentQuestion: null,
-
-      //state so some buttons start hidden
+      //state for some of the buttons to start hidden
+      //shouldHide affects the Play/Share buttons
       shouldHide: true,
+      //postStop affects the "Questions" component. May need to be renamed.
       postStop: true
-    }
+    };
     //Bind functions to component
     this.requestUserMedia = this.requestUserMedia.bind(this);
     this.handleConnect = this.handleConnect.bind(this);
@@ -36,25 +37,28 @@ export default class Record extends React.Component {
 
   componentDidMount() {
 
-    //function to randomize and then set an array into the state
+    //function to randomize and then set an array of questions into the state
+    //these questions are pulled from the database
     let setQuestions = (questionArr) => {
+
       questionsArr = _.shuffle(questionsArr);
 
+      //set the state after randomizing the array
       this.setState({
         currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
       });
     };
     
-    // AJAX get request to get the questions inside of the database
-    //then we call setQuestions function to randomize
+    //AJAX get request to get the questions inside of the database
+    //then we call setQuestions function inside of success to continue randomizing the array and then set the state
     $.ajax({
       type: 'GET', 
       url: '/api/questions', 
-      success: function(data){
+      success: function(data) {
         setQuestions(data); 
       }
-    })
+    });
 
     this.requestUserMedia();
   }
@@ -77,7 +81,7 @@ export default class Record extends React.Component {
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
         <input value={this.state.link} />
       </div>
-    )
+    );
   }
 
   requestUserMedia() {
@@ -94,7 +98,7 @@ export default class Record extends React.Component {
     this.setState({
       stream: stream,
       streamVidUrl: window.URL.createObjectURL(stream)
-    })
+    });
   }
 
   handleError(error) {
@@ -112,10 +116,10 @@ export default class Record extends React.Component {
 
   startRec() {  
     //Check browswer and set the supported types to options
-    let options = getSupportedTypes()
+    let options = getSupportedTypes();
     //Toggle button text and set recording boolean to true
     //Instantiate MediaRecorder
-    let mediaRecorder = new MediaRecorder(this.state.stream, options)
+    let mediaRecorder = new MediaRecorder(this.state.stream, options);
     this.setState({
       toggleRecText: 'Stop Recording',
       isRec: true,
@@ -123,7 +127,7 @@ export default class Record extends React.Component {
       blobs: [],
       postStop: true,
       shouldHide: false
-    })
+    });
 
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
@@ -138,35 +142,35 @@ export default class Record extends React.Component {
     if (event.data && event.data.size > 0) {
       this.setState({
         blobs: this.state.blobs.concat(event.data)
-      })
+      });
     }
   }
 
   stopRec() {
     //Stop the mediaRecorder and toggle
     this.state.mediaRecorder.stop();
-    console.log('Recorded Blobs:', this.state.blobs)
+    console.log('Recorded Blobs:', this.state.blobs);
     //Create a new blob from the array of blobs
     let options = {
       type: 'video/webm'
-    }
-    let superBlob = new Blob(this.state.blobs, options)
+    };
+    let superBlob = new Blob(this.state.blobs, options);
     this.setState({
       toggleRecText: 'Start Recording',
       isRec: false,
       superBlob: superBlob,
       postStop: false
-    })
+    });
   }
 
   playRec() {
     //Give the video element control buttons
-    document.getElementById('recorded').controls = true
+    document.getElementById('recorded').controls = true;
     //Allow user to play back recording
     console.log('the super blob', this.state.superBlob);
     this.setState({
       recVidUrl: window.URL.createObjectURL(this.state.superBlob)
-    })
+    });
   }
 
 
@@ -184,12 +188,12 @@ export default class Record extends React.Component {
     .then((videoData) => {
       console.log('in the promise then:', videoData);
       postVideoUrl(videoData.publicUrl);
-    })
+    });
   }
 
 
   //Promise that returns result of ajax request
-  putObjectToS3(data)  {
+  putObjectToS3(data) {
     return new Promise((resolve, reject) => {
       $.ajax({
         type: 'PUT', 
@@ -197,15 +201,15 @@ export default class Record extends React.Component {
         url: data.preSignedUrl, 
         processData: false,
         contentType: 'video/webm', 
-        success: function(resp){
+        success: function(resp) {
           //If successful, post video url to db
           resolve(data);
         },
         error: function() {
           reject('error uploading to s3');
         }
-      })
-    })
+      });
+    });
   }
 
 
@@ -216,37 +220,39 @@ export default class Record extends React.Component {
     let setVideoLink = (link) => {
       this.setState({
         link: `${window.location.origin}/videos/${link}`
-      })
-    }
+      });
+    };
     //Post to server with publicURL of s3 video
     let data = {
       publicUrl: url
-    }
+    };
     $.ajax({
       type: 'POST', 
       data: data,
       url: '/api/videos', 
-      success: function(data){
+      success: function(data) {
         //If successful, post video url to db
         setVideoLink(data.code);
       },
       error: function() {
-        return 'error uploading to s3'
+        return 'error uploading to s3';
       }
-    })
+    });
   }
 
-  //function for when a user clicks for a next question
+  //function for when a user clicks the next button, they receive another question
   nextQuestion() {
+    //this if statement implies that there is at least 1 question
     if (this.state.allQuestions.length > 0) {
       this.setState({
         currentQuestion: this.state.allQuestions.shift().txt,
         allQuestions: this.state.allQuestions
       });
     } else {
+      //if there are no more questions in the array, tell this to the user.
       this.setState({
         currentQuestion: 'Tentatively there are no more questions!'
-      })
+      });
     }
   }
 

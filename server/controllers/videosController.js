@@ -27,43 +27,43 @@ var generatePreSignedUrl = function(req, res) {
   var preSignedUrl = s3.getSignedUrl('putObject', params);
 
   //Format of publicUrl that will be used to access the video
-  var publicUrl = 'https://s3.amazonaws.com/'+ params.Bucket +'/' + params.Key;
+  var publicUrl = 'https://s3.amazonaws.com/' + params.Bucket + '/' + params.Key;
 
   res.send({preSignedUrl: preSignedUrl, publicUrl: publicUrl});  
-}
+};
 
 //Get video by code and send video to client
 var getVideo = function(req, res) {
-  var code = req.query.code
+  var code = req.query.code;
   console.log('Getting video with code:', code);
   db.Video.findOne({ 
     where: { code: code } 
   }).then(function(video) {
     res.send(video);
-  })
-}
+  });
+};
 
 //Create video with aws public url and uniq code
 //Send code to client on success
 var createVideo = function(req, res) {
   var url = req.body.publicUrl;
   var code = shortid.generate();
-  console.log('Creating video with url:', url)
+  console.log('Creating video with url:', url);
   db.Video.create({
     url: url,
     code: code
   })
   .then(function(video) {
-    console.log('created video:', video)
+    console.log('created video:', video);
     res.send({
       success: 'video created',
       code: video.code
     });
-  })
-}
+  });
+};
 
 module.exports = {
   generatePreSignedUrl: generatePreSignedUrl,
   getVideo: getVideo,
   createVideo: createVideo
-}
+};
