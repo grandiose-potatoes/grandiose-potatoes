@@ -24,12 +24,6 @@ export default class Record extends React.Component {
       //postStop affects the "Questions" component. May need to be renamed.
       postStop: true
     };
-    //Bind functions to component
-    this.toggleRec = this.toggleRec.bind(this);
-    this.handleDataAvailable = this.handleDataAvailable.bind(this);
-    this.playRec = this.playRec.bind(this);
-    this.uploadRec = this.uploadRec.bind(this);
-    this.nextQuestion = this.nextQuestion.bind(this);
   }
   componentDidMount() {
 
@@ -44,14 +38,14 @@ export default class Record extends React.Component {
         <h1> Record a Video </h1>
         <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
         <div>
-          <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
+          <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec.bind(this)}>Play</button>
+          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
         </div>
        
         <div className={this.state.shouldHide ? 'hidden' : ''}>
           <Questions question={this.state.currentQuestion}/>
-          <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+          <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
         </div>
 
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
