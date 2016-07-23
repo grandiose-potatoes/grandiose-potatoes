@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { getPreSignedUrl, getSupportedTypes, getQuestions } from '../recordUtil.js';
+import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 import {Questions} from './Questions.jsx';
 export default class Record extends React.Component {
 
@@ -105,7 +105,9 @@ export default class Record extends React.Component {
     let options = getSupportedTypes();
     //Toggle button text and set recording boolean to true
     //Instantiate MediaRecorder
+    console.log('the options:', options)
     let mediaRecorder = new MediaRecorder(this.state.stream, options);
+    console.log('the mediarecorder:', mediaRecorder);
     this.setState({
       toggleRecText: 'Stop Recording',
       isRec: true,
@@ -124,6 +126,7 @@ export default class Record extends React.Component {
   }
 
   handleDataAvailable(event) {
+    console.log('the data:', event)
     //If there is data add the data to the blobs array
     if (event.data && event.data.size > 0) {
       this.setState({
@@ -163,66 +166,19 @@ export default class Record extends React.Component {
   uploadRec() {
     //Get the pre-signed url from the server, data in promise is in the following format
     // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
-    let putObjectToS3 = this.putObjectToS3.bind(this);
-    let postVideoUrl = this.postVideoUrl.bind(this);
-
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
+      data.superBlob = this.state.superBlob;
       return putObjectToS3(data);
     })
     .then((videoData) => {
-      console.log('in the promise then:', videoData);
-      postVideoUrl(videoData.publicUrl);
-    });
-  }
-
-
-  //Promise that returns result of ajax request
-  putObjectToS3(data) {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        type: 'PUT', 
-        data: this.state.superBlob, 
-        url: data.preSignedUrl, 
-        processData: false,
-        contentType: 'video/webm', 
-        success: function(resp) {
-          //If successful, post video url to db
-          resolve(data);
-        },
-        error: function() {
-          reject('error uploading to s3');
-        }
-      });
-    });
-  }
-
-
-  //Function that is invoked after success of saving video to aws s3
-  //Posts video public url to server to be saved
-  //If post successfull server will respond with share code for video
-  postVideoUrl(url) {
-    let setVideoLink = (link) => {
+      return postVideoUrl(videoData.publicUrl);
+    })
+    .then((code) => {
       this.setState({
-        link: `${window.location.origin}/videos/${link}`
+        link: `${window.location.origin}/videos/${code}`
       });
-    };
-    //Post to server with publicURL of s3 video
-    let data = {
-      publicUrl: url
-    };
-    $.ajax({
-      type: 'POST', 
-      data: data,
-      url: '/api/videos', 
-      success: function(data) {
-        //If successful, post video url to db
-        setVideoLink(data.code);
-      },
-      error: function() {
-        return 'error uploading to s3';
-      }
     });
   }
 
