@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import { getPreSignedUrl, getSupportedTypes } from '../recordUtil.js';
+import { getPreSignedUrl, getSupportedTypes, getQuestions } from '../recordUtil.js';
 import {Questions} from './Questions.jsx';
 export default class Record extends React.Component {
 
@@ -34,34 +34,20 @@ export default class Record extends React.Component {
     this.uploadRec = this.uploadRec.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
   }
-
   componentDidMount() {
 
-    //function to randomize and then set an array of questions into the state
-    //these questions are pulled from the database
-    let setQuestions = (questionArr) => {
-
+    getQuestions((questionsArr) => {
       questionsArr = _.shuffle(questionsArr);
-
-      //set the state after randomizing the array
+      console.log('This is the questionsArr: ', questionsArr);
       this.setState({
         currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
       });
-    };
-    
-    //AJAX get request to get the questions inside of the database
-    //then we call setQuestions function inside of success to continue randomizing the array and then set the state
-    $.ajax({
-      type: 'GET', 
-      url: '/api/questions', 
-      success: function(data) {
-        setQuestions(data); 
-      }
     });
 
     this.requestUserMedia();
   }
+
   render() {
     return (
       <div>
@@ -255,5 +241,4 @@ export default class Record extends React.Component {
       });
     }
   }
-
 }
