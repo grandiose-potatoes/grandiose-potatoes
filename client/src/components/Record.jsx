@@ -55,7 +55,8 @@ export default class Record extends React.Component {
   }
 
   setInitialQuestions() {
-    getQuestions((questionsArr) => {
+    getQuestions()
+    .then((questionsArr) => {
       questionsArr = _.shuffle(questionsArr);
       console.log('This is the questionsArr: ', questionsArr);
       this.setState({

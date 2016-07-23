@@ -32,17 +32,19 @@ export let getSupportedTypes = () => {
 
 
 //function that does a GET request to get an array of questions from our database
-export let getQuestions = (callback) => {
-  $.ajax({
-    type: 'GET', 
-    url: '/api/questions', 
-    success: function(data) {
-      callback(data);
-    },
-    error: function() {
-      console.log('Error with getQuestions');
-    }
-  });
+export let getQuestions = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'GET', 
+      url: '/api/questions', 
+      success: function(data) {
+        resolve(data);
+      },
+      error: function() {
+        reject('Error with getQuestions');
+      }
+    });
+  })
 };
 
 //Promise that returns result of ajax request
