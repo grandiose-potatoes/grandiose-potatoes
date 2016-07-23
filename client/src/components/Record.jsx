@@ -15,7 +15,7 @@ export default class Record extends React.Component {
       blobs: [],
       superBlob: null,
       recVidUrl: null,
-      link: '', 
+      link: '',
       allQuestions: null,
       currentQuestion: null,
 
@@ -45,14 +45,14 @@ export default class Record extends React.Component {
         allQuestions: questionsArr
       });
     };
-    
+
     // AJAX get request to get the questions inside of the database
     //then we call setQuestions function to randomize
     $.ajax({
-      type: 'GET', 
-      url: '/api/questions', 
+      type: 'GET',
+      url: '/api/questions',
       success: function(data){
-        setQuestions(data); 
+        setQuestions(data);
       }
     })
 
@@ -60,22 +60,23 @@ export default class Record extends React.Component {
   }
   render() {
     return (
-      <div>
-        <h1> Record a Video </h1>
-        <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
-        <div>
-          <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
-        </div>
-       
-        <div className={this.state.shouldHide ? 'hidden' : ''}>
-          <Questions question={this.state.currentQuestion}/>
-          <button id="next" onClick={this.nextQuestion}>How about another question?</button>
-        </div>
+      <div className="card">
+        <div className="card-image waves-effect waves-block waves-light">
+          <video id="gum" className="activator" src={this.state.streamVidUrl} autoPlay muted></video>
+          <div>
+            <button id="record" onClick={this.toggleRec}>{this.state.toggleRecText}</button>
+            <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec}>Play</button>
+            <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec}>Share</button>
+          </div>
 
-        <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
-        <input value={this.state.link} />
+          <div className={this.state.shouldHide ? 'hidden' : ''}>
+            <Questions question={this.state.currentQuestion}/>
+            <button id="next" onClick={this.nextQuestion}>How about another question?</button>
+          </div>
+
+          <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
+          <input value={this.state.link} />
+        </div>
       </div>
     )
   }
@@ -90,7 +91,7 @@ export default class Record extends React.Component {
   handleConnect(stream) {
     //Set the stream state
     //Take user media and create a url that will be appended to the video tag in the DOM
-    console.log('Stream connected'); 
+    console.log('Stream connected');
     this.setState({
       stream: stream,
       streamVidUrl: window.URL.createObjectURL(stream)
@@ -110,7 +111,7 @@ export default class Record extends React.Component {
     }
   }
 
-  startRec() {  
+  startRec() {
     //Check browswer and set the supported types to options
     let options = getSupportedTypes()
     //Toggle button text and set recording boolean to true
@@ -129,7 +130,7 @@ export default class Record extends React.Component {
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
 
-    // Only append next question after start recording 
+    // Only append next question after start recording
 
   }
 
@@ -192,11 +193,11 @@ export default class Record extends React.Component {
   putObjectToS3(data)  {
     return new Promise((resolve, reject) => {
       $.ajax({
-        type: 'PUT', 
-        data: this.state.superBlob, 
-        url: data.preSignedUrl, 
+        type: 'PUT',
+        data: this.state.superBlob,
+        url: data.preSignedUrl,
         processData: false,
-        contentType: 'video/webm', 
+        contentType: 'video/webm',
         success: function(resp){
           //If successful, post video url to db
           resolve(data);
@@ -223,9 +224,9 @@ export default class Record extends React.Component {
       publicUrl: url
     }
     $.ajax({
-      type: 'POST', 
+      type: 'POST',
       data: data,
-      url: '/api/videos', 
+      url: '/api/videos',
       success: function(data){
         //If successful, post video url to db
         setVideoLink(data.code);
