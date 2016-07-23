@@ -44,3 +44,47 @@ export let getQuestions = (callback) => {
     }
   });
 };
+
+//Promise that returns result of ajax request
+export let putObjectToS3 = (data) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'PUT', 
+      data: data.superBlob, 
+      url: data.preSignedUrl, 
+      processData: false,
+      contentType: 'video/webm', 
+      success: function(resp) {
+        //If successful, post video url to db
+        resolve(data);
+      },
+      error: function() {
+        reject('error uploading to s3');
+      }
+    });
+  });
+}
+
+//Function that is invoked after success of saving video to aws s3
+//Posts video public url to server to be saved
+//If post successfull server will respond with share code for video
+export let postVideoUrl = (url) => {
+  //Post to server with publicURL of s3 video
+  let data = {
+    publicUrl: url
+  };
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'POST', 
+      data: data,
+      url: '/api/videos', 
+      success: function(data) {
+        //If successful, post video url to db
+        resolve(data.code);
+      },
+      error: function() {
+        reject('Unable to post video to database');
+      }
+    });
+  })
+}
