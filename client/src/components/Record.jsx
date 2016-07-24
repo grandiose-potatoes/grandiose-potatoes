@@ -50,7 +50,7 @@ export default class Record extends React.Component {
 
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
         <input id='shareLink'value={this.state.link} />
-        <button onClick={this.copyToClipboard('#shareLink')}>Copy</button>
+        <button onClick={this.copyToClipboard}>Copy</button>
       </div>
     );
   }
@@ -70,14 +70,9 @@ export default class Record extends React.Component {
     });
   }
 
-  copyToClipboard(element) {
-    console.log(element)
-    var $temp = $("<input>");
-    $("body").append($temp);
-    $temp.val($(element).text()).select();
-    console.log()
+  copyToClipboard () {
+    $('#shareLink').select(); 
     document.execCommand("copy");
-    $temp.remove();
   };
 
 
