@@ -18,7 +18,7 @@ export default class Record extends React.Component {
       link: '', 
       allQuestions: null,
       currentQuestion: null,
-      postStop: true
+      notRecording: true
     };
   }
   componentDidMount() {
@@ -32,11 +32,12 @@ export default class Record extends React.Component {
     return (
       <div className="col s6 offset-s3">
         <h1> Record a Video </h1>
-        <video id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
+        <video className={!this.state.notRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
+        <video className={this.state.notRecording ? 'hide' : ''} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
+
         <div>
           <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
-          <button className={this.state.postStop ? 'hide' : ''} id="play" onClick={this.playRec.bind(this)}>Play</button>
-          <button className={this.state.postStop ? 'hide' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
+          <button className={this.state.notRecording ? 'hide' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
         </div>
        
         <div className={!this.state.isRec ? 'hide' : ''}>
@@ -44,7 +45,6 @@ export default class Record extends React.Component {
           <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
         </div>
 
-        <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
         <input id='shareLink'value={this.state.link} />
         <button onClick={this.copyToClipboard}>Copy</button>
       </div>
@@ -116,8 +116,7 @@ export default class Record extends React.Component {
       isRec: true,
       mediaRecorder: mediaRecorder,
       blobs: [],
-      postStop: true,
-      shouldHide: false
+      notRecording: true
     });
 
     //When data becomes available, call function to handle the data
@@ -150,19 +149,21 @@ export default class Record extends React.Component {
       toggleRecText: 'Start Recording',
       isRec: false,
       superBlob: superBlob,
-      postStop: false
+      notRecording: false,
+      recVidUrl: window.URL.createObjectURL(superBlob)
     });
+    document.getElementById('recorded').controls = true;
   }
 
-  playRec() {
-    //Give the video element control buttons
-    document.getElementById('recorded').controls = true;
-    //Allow user to play back recording
-    console.log('the super blob', this.state.superBlob);
-    this.setState({
-      recVidUrl: window.URL.createObjectURL(this.state.superBlob)
-    });
-  }
+  // playRec() {
+  //   //Give the video element control buttons
+  //   document.getElementById('recorded').controls = true;
+  //   //Allow user to play back recording
+  //   console.log('the super blob', this.state.superBlob);
+  //   this.setState({
+  //     recVidUrl: window.URL.createObjectURL(this.state.superBlob)
+  //   });
+  // }
 
 
   uploadRec() {
