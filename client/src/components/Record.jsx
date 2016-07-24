@@ -15,7 +15,7 @@ export default class Record extends React.Component {
       blobs: [],
       superBlob: null,
       recVidUrl: null,
-      link: '', 
+      link: '',
       allQuestions: null,
       currentQuestion: null,
       notRecording: true
@@ -31,22 +31,23 @@ export default class Record extends React.Component {
   render() {
     return (
       <div className="col s6 offset-s3">
-        <h1> Record a Video </h1>
+        <h4></h4>
         <video className={!this.state.notRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
         <video className={this.state.notRecording ? 'hide' : ''} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
 
         <div>
-          <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
-          <button className={this.state.notRecording ? 'hide' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
+          <a className="waves-effect waves-light btn" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
+          <a className={this.state.notRecording ? 'hide' : ''}  className="waves-effect waves-light btn" id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
+
         </div>
-       
+
         <div className={!this.state.isRec ? 'hide' : ''}>
           <Questions question={this.state.currentQuestion}/>
-          <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
+          <a className="waves-effect waves-light btn" id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</a>
         </div>
 
         <input id='shareLink'value={this.state.link} />
-        <button onClick={this.copyToClipboard}>Copy</button>
+        <a className="waves-effect waves-light btn"  onClick={this.copyToClipboard}>Copy</a>
       </div>
     );
   }
@@ -67,7 +68,7 @@ export default class Record extends React.Component {
   }
 
   copyToClipboard () {
-    $('#shareLink').select(); 
+    $('#shareLink').select();
     document.execCommand("copy");
   };
 
@@ -85,7 +86,7 @@ export default class Record extends React.Component {
   handleConnect(stream) {
     //Set the stream state
     //Take user media and create a url that will be appended to the video tag in the DOM
-    console.log('Stream connected'); 
+    console.log('Stream connected');
     this.setState({
       stream: stream,
       streamVidUrl: window.URL.createObjectURL(stream)
@@ -105,7 +106,7 @@ export default class Record extends React.Component {
     }
   }
 
-  startRec() {  
+  startRec() {
     //Check browswer and set the supported types to options
     let options = getSupportedTypes();
     //Toggle button text and set recording boolean to true
@@ -123,7 +124,7 @@ export default class Record extends React.Component {
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
 
-    // Only append next question after start recording 
+    // Only append next question after start recording
 
   }
 
