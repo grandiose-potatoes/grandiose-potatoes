@@ -30,16 +30,16 @@ export default class Record extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="col s6 offset-s3">
         <h1> Record a Video </h1>
-        <video id="gum" src={this.state.streamVidUrl} autoPlay muted></video>
+        <video id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
         <div>
           <button id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="play" onClick={this.playRec.bind(this)}>Play</button>
-          <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
+          <button className={this.state.postStop ? 'hide' : ''} id="play" onClick={this.playRec.bind(this)}>Play</button>
+          <button className={this.state.postStop ? 'hide' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
         </div>
        
-        <div className={!this.state.isRec ? 'hidden' : ''}>
+        <div className={!this.state.isRec ? 'hide' : ''}>
           <Questions question={this.state.currentQuestion}/>
           <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
         </div>
