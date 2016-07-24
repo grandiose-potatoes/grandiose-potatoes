@@ -20,7 +20,7 @@ export default class App extends React.Component {
 		return (
 			<div className="row">
 				<br></br>
-				<h2 className="header center teal-text text-lighten-0"> This is video messaging app!</h2>
+				<h2 className="header center teal-text text-lighten-0"> This is a video messaging app!</h2>
 				<div className="row center">
 					<h5 className="header col s12 light"> we can add something cheesy here </h5>
 				</div>
