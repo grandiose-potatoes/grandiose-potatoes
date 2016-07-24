@@ -18,16 +18,12 @@ export default class Record extends React.Component {
       link: '', 
       allQuestions: null,
       currentQuestion: null,
-      //state for some of the buttons to start hidden
-      //shouldHide affects the Play/Share buttons
-      shouldHide: true,
-      //postStop affects the "Questions" component. May need to be renamed.
       postStop: true
     };
   }
   componentDidMount() {
 
-    this.setInitialQuestions()
+    this.setInitialQuestions();
     this.requestUserMedia();
 
   }
@@ -43,7 +39,7 @@ export default class Record extends React.Component {
           <button className={this.state.postStop ? 'hidden' : ''} id="upload" onClick={this.uploadRec.bind(this)}>Share</button>
         </div>
        
-        <div className={this.state.shouldHide ? 'hidden' : ''}>
+        <div className={!this.state.isRec ? 'hidden' : ''}>
           <Questions question={this.state.currentQuestion}/>
           <button id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</button>
         </div>
