@@ -15,7 +15,7 @@ var generatePreSignedUrl = function(req, res) {
   var s3 = new AWS.S3();
   var params = {
     //Setup with your bucket name
-    Bucket: 'greenfield-hr44', 
+    Bucket: process.env.AWS_BUCKET, 
     Key: awsFilename, 
     ContentType: 'video/webm',
     ACL: 'public-read', 
