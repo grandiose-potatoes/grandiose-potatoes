@@ -45,7 +45,8 @@ export default class Record extends React.Component {
         </div>
 
         <video id="recorded" autoPlay loop src={this.state.recVidUrl}></video>
-        <input value={this.state.link} />
+        <input id='shareLink'value={this.state.link} />
+        <button onClick={this.copyToClipboard}>Copy</button>
       </div>
     );
   }
@@ -64,6 +65,12 @@ export default class Record extends React.Component {
       throw err;
     });
   }
+
+  copyToClipboard () {
+    $('#shareLink').select(); 
+    document.execCommand("copy");
+  };
+
 
   requestUserMedia() {
     //Use native web api for Media Recorder (https://developers.google.com/web/updates/2016/01/mediarecorder)
