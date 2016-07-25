@@ -2,6 +2,7 @@
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 import {Questions} from './Questions.jsx';
+
 export default class Record extends React.Component {
 
   constructor(props) {
@@ -19,14 +20,18 @@ export default class Record extends React.Component {
       allQuestions: null,
       currentQuestion: null,
       finishedRecording: false,
-      uploading: false
+      uploading: false,
+      secondsElapsed: null,
+      isCountDown: false,
+      timeOfRecording: 120,  
+      timeToShowReminder: 60,
+      intervalHandle: null   
     };
   }
+
   componentDidMount() {
-
     this.setInitialQuestions();
-    this.requestUserMedia();
-
+    this.requestUserMedia(); 
   }
 
   render() {
@@ -34,6 +39,10 @@ export default class Record extends React.Component {
       <div className="col s8 offset-s2">
 
         <br/>
+        <div className={this.state.isCountDown ? '' : 'hide'}>
+          <div>Time left for the recording: {this.state.secondsElapsed}</div>
+        </div>
+
         <video className={this.state.finishedRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
         <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
 
@@ -65,7 +74,6 @@ export default class Record extends React.Component {
     getQuestions()
     .then((questionsArr) => {
       questionsArr = _.shuffle(questionsArr);
-      console.log('This is the questionsArr: ', questionsArr);
       this.setState({
         currentQuestion: questionsArr.shift().txt,
         allQuestions: questionsArr
@@ -136,6 +144,10 @@ export default class Record extends React.Component {
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
+
+    // start the counter 
+    this.setState({intervalHandle: setInterval(this.tick.bind(this), 1000)});
+    this.setState({secondsElapsed: this.state.timeOfRecording}); 
   }
 
   handleDataAvailable(event) {
@@ -210,4 +222,23 @@ export default class Record extends React.Component {
       });
     }
   }
+
+  tick() {
+    if (this.state.secondsElapsed > 0){
+      // showing the reminder 
+      if (this.state.secondsElapsed === this.state.timeToShowReminder){ 
+        this.setState({isCountDown: true})
+      };
+      // count down  
+      this.setState({secondsElapsed: this.state.secondsElapsed - 1});
+    }else{
+      // only stop when it is recording eg, when the countdown is on
+      if (this.state.isCountDown === true){
+        this.stopRec();  
+        this.setState({isCountDown: false}); 
+        clearInterval(this.state.intervalHandle);
+      }; 
+    }
+  }
+
 }
