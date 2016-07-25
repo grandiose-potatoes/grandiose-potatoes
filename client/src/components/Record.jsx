@@ -40,7 +40,7 @@ export default class Record extends React.Component {
         <div>
           <br/>
           <a className="waves-effect waves-light btn blue darken-1" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
-          <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn blue darken-1'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
+          <a className={this.state.finishedRecording ? 'waves-effect waves-light btn blue darken-1' : 'hide waves-effect waves-light btn blue darken-1'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
         </div>
 
         <div className={this.state.isRec ? '' : 'hide'}>
