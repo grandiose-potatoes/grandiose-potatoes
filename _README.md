@@ -24,11 +24,8 @@
 
 ## Requirements
 
-- Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- Node 4.4.7
+- PostgreSQL, http://postgresapp.com/
 
 ## Development
 
@@ -37,9 +34,23 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
+touch .env
+//inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET
 npm install
-bower install
+
+Inside of Postgres, create a database for the project (we call it greenfield):
+CREATE DATABASE greenfield;
+
+//this will populate database with the questions
+npm run seed
+
+//this will start webpack
+npm run build:dev
+
+//opens server
+npm start
+
+
 ```
 
 ### Roadmap
