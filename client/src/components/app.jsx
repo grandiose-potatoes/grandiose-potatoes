@@ -25,20 +25,9 @@ export default class App extends React.Component {
 				<h2 className="header center blue-text blue-darken-1">A seamless video chat experience</h2>
 				<div className="row center">
 					<h4 className="header col s12 light">Never miss another message again</h4>
-					<div className="col s12 m12 offset-m2 l6 offset-l3">
-		        <div className="row valign-wrapper">
-		          <div className="col s10">
-		            <Link to="/record" id="download-button" className="btn-large waves-effect waves-light blue darken-1">
-									<span>record a video</span>
-								</Link>
-		          </div>
-		            <div className="col s12">
-		              <span>
-		                Have you ever missed out on a video chat with a loved one because of the time just didn't work out? With Vime, you can video chat on your schedule, whenever you want with whoever you want.
-		              </span>
-		            </div>
-		          </div>
-		      </div>
+		      <Link to="/record" id="download-button" className="btn-large waves-effect waves-light blue darken-1">
+						<span>record a video</span>
+					</Link>
 				</div>
 
 				<div className="section">
