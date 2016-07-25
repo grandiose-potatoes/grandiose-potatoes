@@ -23,8 +23,9 @@ export default class Record extends React.Component {
       uploading: false,
       secondsElapsed: null,
       isCountDown: false,
-      timeOfRecording: 120,  
-      timeToShowReminder: 60  
+      timeOfRecording: 10,  
+      timeToShowReminder: 5,
+      intervalHandle: null   
     };
   }
 
@@ -145,8 +146,7 @@ export default class Record extends React.Component {
     mediaRecorder.start(10); // collect 10ms of data
 
     // start the counter 
-    setInterval(this.tick.bind(this), 1000);
-    // restart the counter for second recording 
+    this.setState({intervalHandle: setInterval(this.tick.bind(this), 1000)});
     this.setState({secondsElapsed: this.state.timeOfRecording}); 
   }
 
@@ -236,6 +236,7 @@ export default class Record extends React.Component {
       if (this.state.isCountDown === true){
         this.stopRec();  
         this.setState({isCountDown: false}); 
+        clearInterval(this.state.intervalHandle);
       }; 
     }
   }
