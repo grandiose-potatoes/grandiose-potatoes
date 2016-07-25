@@ -15,7 +15,8 @@ export default class VideoPlayer extends React.Component {
   render() {
     return (
       <div className='col s8 offset-s2'>
-        <br></br>
+        <br/>
+        <br/>
         <video controls src={this.state.videoUrl} width="100%"/>
       </div>
     );

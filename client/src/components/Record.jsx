@@ -32,14 +32,15 @@ export default class Record extends React.Component {
   render() {
     return (
       <div className="col s8 offset-s2">
-        <h4></h4>
+
+        <br/>
         <video className={this.state.finishedRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
         <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
 
         <div>
+          <br/>
           <a className="waves-effect waves-light btn" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
           <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
-
         </div>
 
         <div className={this.state.isRec ? '' : 'hide'}>
@@ -60,6 +61,7 @@ export default class Record extends React.Component {
   }
 
   setInitialQuestions() {
+    //Get questions from server
     getQuestions()
     .then((questionsArr) => {
       questionsArr = _.shuffle(questionsArr);
@@ -75,6 +77,7 @@ export default class Record extends React.Component {
   }
 
   copyToClipboard () {
+    //Copy share link to clipboard
     $('#shareLink').select();
     document.execCommand("copy");
   };
@@ -92,7 +95,7 @@ export default class Record extends React.Component {
 
   handleConnect(stream) {
     //Set the stream state
-    //Take user media and create a url that will be appended to the video tag in the DOM
+    //Take user media and create a url that will be added to the video tag src in the DOM
     console.log('Stream connected');
     this.setState({
       stream: stream,
@@ -106,6 +109,8 @@ export default class Record extends React.Component {
   }
 
   toggleRec() {
+    //If the user is recording invoke stopRec
+    //else invoke startRec if the user is not recording
     if (this.state.isRec) {
       this.stopRec();
     } else {
@@ -114,10 +119,11 @@ export default class Record extends React.Component {
   }
 
   startRec() {
-    //Check browswer and set the supported types to options
+    //Check browswer and set the supported types to options variable
     let options = getSupportedTypes();
-    //Toggle button text and set recording boolean to true
-    //Instantiate MediaRecorder
+    //Toggle button text and set isRec boolean to true and finishedRecordingb boolean to false
+    //Set blobs to an empty array 
+    //Instantiate MediaRecorder 
     let mediaRecorder = new MediaRecorder(this.state.stream, options);
     this.setState({
       toggleRecText: 'Stop Recording',
@@ -130,9 +136,6 @@ export default class Record extends React.Component {
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
     mediaRecorder.start(10); // collect 10ms of data
-
-    // Only append next question after start recording
-
   }
 
   handleDataAvailable(event) {
@@ -147,11 +150,10 @@ export default class Record extends React.Component {
   stopRec() {
     //Stop the mediaRecorder and toggle
     this.state.mediaRecorder.stop();
-    console.log('Recorded Blobs:', this.state.blobs);
-    //Create a new blob from the array of blobs
     let options = {
       type: 'video/webm'
     };
+    //Create a new blob from the array of blobs
     let superBlob = new Blob(this.state.blobs, options);
     this.setState({
       toggleRecText: 'Start Recording',
@@ -164,21 +166,25 @@ export default class Record extends React.Component {
   }
 
   uploadRec() {
+    //Set the uploading to true to show the loader bar
     this.setState({
       uploading: true
     })
     //Get the pre-signed url from the server, data in promise is in the following format
-    // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
+    //{ preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl }
     getPreSignedUrl()
     .then((data) => {
       //Upload data to S3 with pre-signed url
+      //extend the data object to include the superBlob
       data.superBlob = this.state.superBlob;
       return putObjectToS3(data);
     })
     .then((videoData) => {
+      //Take the video's publicUrl and post to the server
       return postVideoUrl(videoData.publicUrl);
     })
     .then((code) => {
+      //Set the share link and remove the spinner from the page
       this.setState({
         link: `${window.location.origin}/videos/${code}`,
         uploading: false
