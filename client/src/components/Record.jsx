@@ -18,7 +18,8 @@ export default class Record extends React.Component {
       link: '',
       allQuestions: null,
       currentQuestion: null,
-      notRecording: true
+      finishedRecording: false,
+      uploading: false
     };
   }
   componentDidMount() {
@@ -30,24 +31,30 @@ export default class Record extends React.Component {
 
   render() {
     return (
-      <div className="col s6 offset-s3">
+      <div className="col s8 offset-s2">
         <h4></h4>
-        <video className={!this.state.notRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
-        <video className={this.state.notRecording ? 'hide' : ''} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
+        <video className={this.state.finishedRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
+        <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
 
         <div>
           <a className="waves-effect waves-light btn" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
-          <a className={this.state.notRecording ? 'hide' : ''}  className="waves-effect waves-light btn" id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
+          <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
 
         </div>
 
-        <div className={!this.state.isRec ? 'hide' : ''}>
+        <div className={this.state.isRec ? '' : 'hide'}>
           <Questions question={this.state.currentQuestion}/>
           <a className="waves-effect waves-light btn" id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</a>
         </div>
 
-        <input id='shareLink'value={this.state.link} />
-        <a className="waves-effect waves-light btn"  onClick={this.copyToClipboard}>Copy</a>
+        <div className={this.state.uploading ? 'progress' : 'hide progress'}>
+          <div className="indeterminate"></div>
+        </div>
+
+        <div className={this.state.link ? '' : 'hide'}>
+          <input id='shareLink'value={this.state.link} />
+          <a className="waves-effect waves-light btn"  onClick={this.copyToClipboard}>Copy</a>
+        </div>
       </div>
     );
   }
@@ -117,7 +124,7 @@ export default class Record extends React.Component {
       isRec: true,
       mediaRecorder: mediaRecorder,
       blobs: [],
-      notRecording: true
+      finishedRecording: false
     });
 
     //When data becomes available, call function to handle the data
@@ -150,24 +157,16 @@ export default class Record extends React.Component {
       toggleRecText: 'Start Recording',
       isRec: false,
       superBlob: superBlob,
-      notRecording: false,
+      finishedRecording: true,
       recVidUrl: window.URL.createObjectURL(superBlob)
     });
     document.getElementById('recorded').controls = true;
   }
 
-  // playRec() {
-  //   //Give the video element control buttons
-  //   document.getElementById('recorded').controls = true;
-  //   //Allow user to play back recording
-  //   console.log('the super blob', this.state.superBlob);
-  //   this.setState({
-  //     recVidUrl: window.URL.createObjectURL(this.state.superBlob)
-  //   });
-  // }
-
-
   uploadRec() {
+    this.setState({
+      uploading: true
+    })
     //Get the pre-signed url from the server, data in promise is in the following format
     // { preSignedUrl: examplePreSignedUrl, publicUrl: examplePublicUrl, superBlob: exampleSuperBlob}
     getPreSignedUrl()
@@ -181,7 +180,8 @@ export default class Record extends React.Component {
     })
     .then((code) => {
       this.setState({
-        link: `${window.location.origin}/videos/${code}`
+        link: `${window.location.origin}/videos/${code}`,
+        uploading: false
       });
     })
     .catch((err) => {
