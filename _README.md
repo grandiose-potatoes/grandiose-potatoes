@@ -31,11 +31,6 @@
 
 From within the root directory:
 
-First, create a .env file. Inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET.
-```sh
-touch .env
-```
-
 Install all npm dependencies.
 ```sh
 npm install
@@ -46,12 +41,16 @@ Inside of Postgres, create a database for the project (we call it greenfield):
 CREATE DATABASE greenfield;
 ```
 
-This will populate database with questions.
+Populate the database with questions for the user.
 ```sh
 npm run seed
 ```
 
-This will start webpack.
+Allows WebRTC's (the video player) adapter.js to stay updated.
+```sh
+npm run postinstall
+
+Initiate webpack.
 ```sh
 npm run build:dev
 ```
@@ -59,6 +58,20 @@ npm run build:dev
 Open the server with Nodemon.
 ```sh
 npm start
+```
+
+Once the app is up and running, you will need to create an Amazon S3 account to host recorded videos. https://aws.amazon.com/s3/
+
+In your root directory, create a .env file.
+```sh
+touch .env
+```
+
+Inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET. You can create an AWS bucket inside of the S3 account. You .env file should look like this:
+```sh
+ACCESS_KEY_ID=<your-access-key-id>
+SECRET_ACCESS_KEY=B<your-secret-access-key>
+AWS_BUCKET=<your-aws-bucket>
 ```
 
 ### Roadmap

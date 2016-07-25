@@ -39,13 +39,13 @@ export default class Record extends React.Component {
 
         <div>
           <br/>
-          <a className="waves-effect waves-light btn" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
-          <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
+          <a className="waves-effect waves-light btn blue darken-1" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
+          <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn blue darken-1'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
         </div>
 
         <div className={this.state.isRec ? '' : 'hide'}>
           <Questions question={this.state.currentQuestion}/>
-          <a className="waves-effect waves-light btn" id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</a>
+          <a className="waves-effect waves-light btn blue darken-1" id="next" onClick={this.nextQuestion.bind(this)}>How about another question?</a>
         </div>
 
         <div className={this.state.uploading ? 'progress' : 'hide progress'}>
@@ -54,7 +54,7 @@ export default class Record extends React.Component {
 
         <div className={this.state.link ? '' : 'hide'}>
           <input id='shareLink'value={this.state.link} />
-          <a className="waves-effect waves-light btn"  onClick={this.copyToClipboard}>Copy</a>
+          <a className="waves-effect waves-light btn blue darken-1"  onClick={this.copyToClipboard}>Copy</a>
         </div>
       </div>
     );
