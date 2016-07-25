@@ -8,6 +8,7 @@ export default class App extends React.Component {
 		super(props);
 	}
 
+	//Render nested routes if the user has navigated to a nested route endpoint, otherwise render the home component
 	render() {
 		if (this.props.children) {
 			return (
@@ -15,13 +16,12 @@ export default class App extends React.Component {
 					{this.props.children}
 	  		</div>
 			);
-		}
-		
-		return (
-			<div>
-			  <Home />
-			</div>
-		);
-	
+		} else {
+			return (
+				<div>
+				  <Home />
+				</div>
+			);
+		}	
 	}
 }
