@@ -2,8 +2,8 @@
 
 node_modules
 client/lib
-//client/bundle.js
-//client/bundle.js.map
+client/bundle.js
+client/bundle.js.map
 client/src/adapter.js
 // this is the amazon S3 API keys
 server/config.js
