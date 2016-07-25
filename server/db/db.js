@@ -9,6 +9,10 @@
 // use <database>
 // DESCRIBE <table name> //verify the set-up of a new table
 
+// We are using postgres database for production in heroku
+// Download that here: http://postgresapp.com/ or install via home brew 
+// Then click open psql in the menu bar 
+
 var Sequelize = require('sequelize'); 
 
 //If production use production database

@@ -5,8 +5,7 @@ AWS.config.update({accessKeyId: process.env.ACCESS_KEY_ID, secretAccessKey: proc
 AWS.config.update({region: 'us-east-1'});
 var shortid = require('shortid');
 
-//Create a pre-signed url which will be used by the client 
-//to post video to S3
+//Create a pre-signed url which will be used by the client to post video to S3
 var generatePreSignedUrl = function(req, res) {
   //Generate unique filename for video
   var awsFilename = Date.now() + '-' + shortid.generate();
@@ -19,10 +18,9 @@ var generatePreSignedUrl = function(req, res) {
     Key: awsFilename, 
     ContentType: 'video/webm',
     ACL: 'public-read', 
-    Expires: 600
-  }; // this is the time which the URL is available for putting file
+    Expires: 600 // this is the time which the URL is available for putting file
+  }; 
   
-
   //S3 method to generate pre-signed-url from the params
   var preSignedUrl = s3.getSignedUrl('putObject', params);
 
