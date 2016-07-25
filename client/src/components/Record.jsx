@@ -23,8 +23,8 @@ export default class Record extends React.Component {
       uploading: false,
       secondsElapsed: null,
       isCountDown: false,
-      timeOfRecording: 10,  
-      timeToShowReminder: 5,
+      timeOfRecording: 120,  
+      timeToShowReminder: 60,
       intervalHandle: null   
     };
   }
