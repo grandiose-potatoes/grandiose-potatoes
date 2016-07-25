@@ -4,7 +4,11 @@
 
 ## Team
 
-  - Development Team Members: Billy Lan, Michael De La Cruz, Edmund To, Clay Han
+  - Development Team Members:
+  Billy Lan,
+  Michael De La Cruz,
+  Edmund To,
+  Clay Han
 
 ## Table of Contents
 
@@ -36,7 +40,7 @@ Install all npm dependencies.
 npm install
 ```
 
-Inside of Postgres, create a database for the project (we call it greenfield):
+Inside of Postgres (the terminal if you are using PostgresApp), create a database for the project (we call it greenfield):
 ```sh
 CREATE DATABASE greenfield;
 ```
@@ -49,6 +53,7 @@ npm run seed
 Allows WebRTC's (the video player) adapter.js to stay updated.
 ```sh
 npm run postinstall
+```
 
 Initiate webpack.
 ```sh
@@ -70,7 +75,7 @@ touch .env
 Inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET. You can create an AWS bucket inside of the S3 account. You .env file should look like this:
 ```sh
 ACCESS_KEY_ID=<your-access-key-id>
-SECRET_ACCESS_KEY=B<your-secret-access-key>
+SECRET_ACCESS_KEY=<your-secret-access-key>
 AWS_BUCKET=<your-aws-bucket>
 ```
 
