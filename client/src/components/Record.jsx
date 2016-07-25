@@ -32,14 +32,15 @@ export default class Record extends React.Component {
   render() {
     return (
       <div className="col s8 offset-s2">
-        <h4></h4>
+
+        <br/>
         <video className={this.state.finishedRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
         <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
 
         <div>
+          <br/>
           <a className="waves-effect waves-light btn" id="record" onClick={this.toggleRec.bind(this)}>{this.state.toggleRecText}</a>
           <a className={this.state.finishedRecording ? 'waves-effect waves-light btn' : 'hide waves-effect waves-light btn'} id="upload" onClick={this.uploadRec.bind(this)}>Share</a>
-
         </div>
 
         <div className={this.state.isRec ? '' : 'hide'}>
