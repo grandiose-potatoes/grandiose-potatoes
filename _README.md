@@ -1,17 +1,15 @@
 # Project Name
 
-> Pithy project description
+> Vime
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - Development Team Members: Billy Lan, Michael De La Cruz, Edmund To, Clay Han
 
 ## Table of Contents
 
 1. [Usage](#Usage)
-1. [Requirements](#requirements)
+1. [Required Applications](#Required-Applications)
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
     1. [Tasks](#tasks)
@@ -22,7 +20,7 @@
 
 > Some usage instructions
 
-## Requirements
+## Required Applications
 
 - Node 4.4.7
 - PostgreSQL, http://postgresapp.com/
@@ -56,8 +54,6 @@ npm run build:dev
 opens server
 ```sh
 npm start
-```
-
 ```
 
 ### Roadmap
