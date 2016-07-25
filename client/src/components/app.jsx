@@ -29,7 +29,7 @@ export default class App extends React.Component {
 		        <div className="row valign-wrapper">
 		          <div className="col s10">
 		            <Link to="/record" id="download-button" className="btn-large waves-effect waves-light blue darken-1">
-									<span>record now</span>
+									<span>record a video</span>
 								</Link>
 		          </div>
 		            <div className="col s12">
