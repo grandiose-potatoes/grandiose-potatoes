@@ -35,21 +35,28 @@ From within the root directory:
 
 ```sh
 touch .env
-//inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET
+```
+inside of the .env file, provide the ACCESS_KEY_ID, SECRET_ACCESS_KEY, and AWS_BUCKET
+```sh
 npm install
-
+```
 Inside of Postgres, create a database for the project (we call it greenfield):
+```sh
 CREATE DATABASE greenfield;
-
-//this will populate database with the questions
+```
+this will populate database with the questions
+```sh
 npm run seed
+```
 
-//this will start webpack
+this will start webpack
+```sh
 npm run build:dev
-
-//opens server
+```
+opens server
+```sh
 npm start
-
+```
 
 ```
 
