@@ -84,7 +84,7 @@ export default class Record extends React.Component {
     });
   }
 
-  copyToClipboard () {
+  copyToClipboard() {
     //Copy share link to clipboard
     $('#shareLink').select();
     document.execCommand("copy");
@@ -234,7 +234,7 @@ export default class Record extends React.Component {
       };
       // count down  
       this.setState({secondsElapsed: this.state.secondsElapsed - 1});
-    }else{
+    } else {
       // only stop when it is recording eg, when the countdown is on
       if (this.state.isCountDown === true){
         this.stopRec();  
