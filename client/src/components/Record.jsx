@@ -30,6 +30,7 @@ export default class Record extends React.Component {
   }
 
   componentDidMount() {
+    this.checkUserProtocol();
     this.setInitialQuestions();
     this.requestUserMedia(); 
   }
@@ -67,6 +68,15 @@ export default class Record extends React.Component {
         </div>
       </div>
     );
+  }
+
+  checkUserProtocol() {
+    let isSecureOrigin = location.protocol === 'https:' || location.host === 'localhost:3000';
+    if (!isSecureOrigin) {
+      alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
+        '\n\nChanging protocol to HTTPS');
+      location.protocol = 'HTTPS';
+    }   
   }
 
   setInitialQuestions() {
