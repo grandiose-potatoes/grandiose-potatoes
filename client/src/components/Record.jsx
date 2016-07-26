@@ -45,7 +45,7 @@ export default class Record extends React.Component {
         </div>
 
         <video className={this.state.finishedRecording ? 'hide' : ''} id="gum" src={this.state.streamVidUrl} autoPlay muted width="100%"></video>
-        <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" autoPlay loop src={this.state.recVidUrl} width="100%"></video>
+        <video className={this.state.finishedRecording ? '' : 'hide'} id="recorded" src={this.state.recVidUrl} width="100%"></video>
 
         <div>
           <br/>
