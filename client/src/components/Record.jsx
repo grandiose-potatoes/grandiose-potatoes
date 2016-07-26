@@ -123,6 +123,7 @@ export default class Record extends React.Component {
       this.stopRec();
     } else {
       this.startRec();
+      this.startTimer();
     }
   }
 
@@ -143,11 +144,13 @@ export default class Record extends React.Component {
 
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
-    mediaRecorder.start(10); // collect 10ms of data
+    mediaRecorder.start(10); // collect 10ms of data 
+  }
 
+  startTimer() {
     // start the counter 
     this.setState({intervalHandle: setInterval(this.tick.bind(this), 1000)});
-    this.setState({secondsElapsed: this.state.timeOfRecording}); 
+    this.setState({secondsElapsed: this.state.timeOfRecording});
   }
 
   handleDataAvailable(event) {
