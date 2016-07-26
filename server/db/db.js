@@ -1,13 +1,6 @@
-// In order to create the DB, start in Terminal:
-// mysql.server start
-// mysql -u root -p
-
-// mysql shell commands:
-// show databases;
-// show tables;
-// create database <database name>
-// use <database>
-// DESCRIBE <table name> //verify the set-up of a new table
+//Using either MySQL or PostgreSQL, create a database for this project
+//Default database is named greenfield
+// CREATE DATABASE greenfield;
 
 // We are using postgres database for production in heroku
 // Download that here: http://postgresapp.com/ or install via home brew 
@@ -25,8 +18,8 @@ if (process.env.DATABASE_URL) {
 } else {
   //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
   var db = new Sequelize('greenfield', null, null, {
-    protocol: 'postgres',
-    dialect: 'postgres',
+    protocol: 'postgres', // or mysql
+    dialect: 'postgres', // or mysql
     host: 'localhost'
   })
 }

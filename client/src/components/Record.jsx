@@ -84,7 +84,7 @@ export default class Record extends React.Component {
     });
   }
 
-  copyToClipboard () {
+  copyToClipboard() {
     //Copy share link to clipboard
     $('#shareLink').select();
     document.execCommand("copy");
@@ -123,6 +123,7 @@ export default class Record extends React.Component {
       this.stopRec();
     } else {
       this.startRec();
+      this.startTimer();
     }
   }
 
@@ -143,11 +144,13 @@ export default class Record extends React.Component {
 
     //When data becomes available, call function to handle the data
     mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this);
-    mediaRecorder.start(10); // collect 10ms of data
+    mediaRecorder.start(10); // collect 10ms of data 
+  }
 
+  startTimer() {
     // start the counter 
     this.setState({intervalHandle: setInterval(this.tick.bind(this), 1000)});
-    this.setState({secondsElapsed: this.state.timeOfRecording}); 
+    this.setState({secondsElapsed: this.state.timeOfRecording});
   }
 
   handleDataAvailable(event) {
@@ -231,7 +234,7 @@ export default class Record extends React.Component {
       };
       // count down  
       this.setState({secondsElapsed: this.state.secondsElapsed - 1});
-    }else{
+    } else {
       // only stop when it is recording eg, when the countdown is on
       if (this.state.isCountDown === true){
         this.stopRec();  

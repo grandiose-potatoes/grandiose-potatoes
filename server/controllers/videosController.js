@@ -2,6 +2,7 @@ var db = require('../db/db.js');
 var AWS = require('aws-sdk');
 require('dotenv').config();
 AWS.config.update({accessKeyId: process.env.ACCESS_KEY_ID, secretAccessKey: process.env.SECRET_ACCESS_KEY});
+//Default region
 AWS.config.update({region: 'us-east-1'});
 var shortid = require('shortid');
 
