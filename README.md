@@ -85,6 +85,17 @@ SECRET_ACCESS_KEY=<your-secret-access-key>
 AWS_BUCKET=<your-aws-bucket>
 ```
 
+In order to push to Heroku, setup Heroku config variables (see above) as well as setup for Heroku Postgres addon
+https://elements.heroku.com/addons/heroku-postgresql
+
+If you choose to run Webpack on production, run the following command to allow heroku to install devDependencies
+
+```sh
+heroku config:set NPM_CONFIG_PRODUCTION=false
+```
+
+
+
 <!-- ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
