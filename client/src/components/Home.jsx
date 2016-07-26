@@ -36,7 +36,7 @@ export let Home = function (props) {
             <div className="icon-block">
               <h2 className="center light-blue-text"><i className="medium material-icons">textsms</i></h2>
               <h5 className="center">Lost for words?</h5>
-              <p className="light">Sometimes we don't have much to say outside of what we ate for lunch, but there's some great stories that happen throughout the day we forget that people would love to hear. Vime can throw some questions your way to get the juices flowing so every video is unique and interesting.</p>
+              <p className="light">Sometimes we don't have much to say outside of what we ate for lunch, but there's some great stories that happen throughout the day we forget about that other people would love to hear. Vime can throw some questions your way to get the juices flowing so every video is unique and interesting.</p>
             </div>
           </div>
         </div>
