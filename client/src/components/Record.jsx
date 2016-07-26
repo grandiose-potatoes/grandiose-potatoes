@@ -30,8 +30,8 @@ export default class Record extends React.Component {
   }
 
   componentDidMount() {
-    this.setInitialQuestions();
     this.checkUserProtocol();
+    this.setInitialQuestions();
     this.requestUserMedia(); 
   }
 
