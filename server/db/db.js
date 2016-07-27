@@ -17,7 +17,7 @@ if (process.env.DATABASE_URL) {
   })
 } else {
   //Change the arguments to sequelize as neccessary ('Database', 'username', 'password')
-  var db = new Sequelize('greenfield', null, null, {
+  var db = new Sequelize('legacy', null, null, {
     protocol: 'postgres', // or mysql
     dialect: 'postgres', // or mysql
     host: 'localhost'
@@ -28,7 +28,7 @@ if (process.env.DATABASE_URL) {
 // TODO implement User and User Auth
 var User = db.define('user', {
   username: Sequelize.STRING, 
-  password: Sequelize.STRING,
+  password: Sequelize.STRING
 });
 
 var Video = db.define('video', {

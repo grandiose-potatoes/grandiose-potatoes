@@ -1,22 +1,47 @@
 var db = require('../db/db.js');
+var bcrypt = require('bcrypt');
+var session = require('express-session')
+
+// app.use(session({
+//   secret: 'secret passcode'
+// }))
 
 var signup = function(req, res) {
-  var username = req.body.username
+  var username = req.body.username;
+  var password = req.body.password;
+  console.log(username)
+  console.log(password)
+  console.log('i ogt in the signup at least')
   // check to see if the username is in the database
   db.User.findOne({
-    where: { username: username}
+    where: { 
+      username: username
+    }
   }).then(function(userID) {
+    // if it is not in the database
     if(userID !== undefined) {
-      
+      // hash the password
+      bcrypt.hash(password, saltRounds, function(err, hash) {
+        if(err) {
+          console.log('There was an error in the hasing function: signin')
+        } else { // add user & password to database
+          db.User.create({
+            username: username,
+            password: hash
+          })
+        }
+      })
+      // set a session for user
+      req.session.regenerate(function(err) {
+        // redirect them to homepage
+        res.redirect('/homepage')
+      })
+
+    } else { // if user is in the database
+      // send user back to the login page with the message that that username has already been taken
+      res.redirect('/signup')
     }
   })
-    // if it is not in the database
-      // hash the password
-      // add user & password to database
-      // set a session for user
-      // redirect them to homepage
-    // if user is in the database
-      // send user back to the login page with the message that that username has already been taken
 }
 
 var login = function(req, res) {
