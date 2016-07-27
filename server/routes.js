@@ -10,12 +10,17 @@ router.get('/api/presigned', videosController.generatePreSignedUrl);
 router.get('/api/videos', videosController.getVideo);
 router.post('/api/videos', videosController.createVideo);
 
+router.post('/api/signup', function(req, res) {
+  console.log(req.body)
+});
+
 
 //Send homepage when users route to videos or record endpoint
 //React Router will handle showing the appropriate views
 router.get('/videos/*', homeController.sendHome);
 router.get('/record', homeController.sendHome);
 router.get('/login', homeController.sendHome);
+router.get('/signup', homeController.sendHome);
 
 //TODO
 //Handle unknown routes;
