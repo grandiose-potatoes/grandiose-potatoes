@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 import {Questions} from './Questions.jsx';
