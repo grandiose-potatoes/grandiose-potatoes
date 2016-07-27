@@ -1,12 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
-export let Home = function (props) {
+function Home(props) {
   return (
     <div className="row">
-      
       <br></br>
-      
       <h2 className="header center blue-text blue-darken-1">A seamless video chat experience</h2>
       <div className="row center">
         <h4 className="header col s12 light">Never miss another message again</h4>
@@ -14,15 +12,13 @@ export let Home = function (props) {
           <span>record a video</span>
         </Link>
       </div>
-
       <div className="section">
         <div className="row">
           <div className="col s12 m4">
             <div className="icon-block">
               <h2 className="center light-blue-text"><i className="medium material-icons">av_timer</i></h2>
               <h5 className="center">On your time</h5>
-              <p className="light">With Vime, you can create a video message on your own schedule. Record a video to send to someone
-                and let them watch it whenever they want. Can't talk face to face in the morning because someone is going to sleep in a different time zone? No problem, record a video and they can watch the video whenever they wake up. Never let time be a factor again.</p>
+              <p className="light">With Vime, you can create a video message on your own schedule. Record a video to send to someone and let them watch it whenever they want. Can't talk face to face in the morning because someone is going to sleep in a different time zone? No problem, record a video and they can watch the video whenever they wake up. Never let time be a factor again.</p>
             </div>
           </div>
           <div className="col s12 m4">
@@ -43,4 +39,8 @@ export let Home = function (props) {
       </div>
     </div>
   );
-};
+}
+
+Home.propTypes = {};
+
+export default Home;
