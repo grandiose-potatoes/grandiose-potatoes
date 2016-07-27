@@ -7,8 +7,8 @@
     "start": "nodemon server/server.js",
     "seed": "node server/db/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "webpack --config --watch -d ./webpack.config.js",
-    "build:prod": "webpack --config ./webpack.config.js",
+    "build:dev": "webpack --watch",
+    "build:prod": "webpack",
     "postinstall": "cp ./node_modules/webrtc-adapter/out/adapter.js ./client/src && npm run build:prod"
   },
   "author": "",
