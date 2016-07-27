@@ -58,6 +58,7 @@ var Question = db.define('question', {
 // User.sync(); 
 Video.sync(); 
 Question.sync(); 
+User.sync();
 
 module.exports = {
   Video: Video, 

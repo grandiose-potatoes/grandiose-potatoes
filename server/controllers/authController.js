@@ -5,13 +5,13 @@ var session = require('express-session')
 // app.use(session({
 //   secret: 'secret passcode'
 // }))
+const saltRounds = 10;
 
 var signup = function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
   console.log(username)
   console.log(password)
-  console.log('i ogt in the signup at least')
   // check to see if the username is in the database
   db.User.findOne({
     where: { 
@@ -19,7 +19,7 @@ var signup = function(req, res) {
     }
   }).then(function(userID) {
     // if it is not in the database
-    if(userID !== undefined) {
+    if(userID === null) {
       // hash the password
       bcrypt.hash(password, saltRounds, function(err, hash) {
         if(err) {
