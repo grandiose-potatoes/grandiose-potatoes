@@ -26,11 +26,10 @@ if (process.env.DATABASE_URL) {
 
 
 // TODO implement User and User Auth
-// var User = db.define('user', {
-//   username: Sequelize.STRING, 
-//   password: Sequelize.STRING,
-//   partnerId: Sequelize.INTEGER   
-// });
+var User = db.define('user', {
+  username: Sequelize.STRING, 
+  password: Sequelize.STRING,
+});
 
 var Video = db.define('video', {
   //Create a unique alphanumeric id
@@ -63,4 +62,5 @@ Question.sync();
 module.exports = {
   Video: Video, 
   Question: Question
+  User: User
 }
