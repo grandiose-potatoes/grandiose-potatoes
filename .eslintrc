@@ -15,5 +15,6 @@
   },
   "globals": {
     "MediaRecorder": true,
+    "$": true,
   }
 }
