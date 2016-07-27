@@ -1,6 +1,6 @@
 import React from 'react';
 import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
-import { Questions } from './Questions.jsx';
+import Questions from './Questions.jsx';
 
 class Record extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class Record extends React.Component {
       recVidUrl: null,
       link: '',
       allQuestions: null,
-      currentQuestion: null,
+      currentQuestion: '',
       finishedRecording: false,
       uploading: false,
       secondsElapsed: null,

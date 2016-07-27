@@ -1,8 +1,7 @@
 import React from 'react';
-import { Home } from './Home.jsx';
+import Home from './Home.jsx';
 
 function App(props) {
-  console.log(props.children);
   if (props.children) {
     return (
       <div className="row">
