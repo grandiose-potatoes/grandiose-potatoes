@@ -61,6 +61,6 @@ Question.sync();
 
 module.exports = {
   Video: Video, 
-  Question: Question
-  User: User
+  Question: Question,
+  User: User,
 }

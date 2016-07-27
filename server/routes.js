@@ -1,6 +1,7 @@
 var questionsController = require('./controllers/questionsController.js');
 var videosController = require('./controllers/videosController.js');
 var homeController = require('./controllers/homeController.js');
+var authController = require('./controllers/authController.js');
 var router = require('express').Router();
 var db = require('./db/db.js');
 
