@@ -17,7 +17,6 @@ router.get('/api/presigned', videosController.generatePreSignedUrl);
 router.get('/api/videos', videosController.getVideo);
 router.post('/api/videos', videosController.createVideo);
 
-// auth routes
 router.post('/api/signup', authController.signup)
 router.post('/api/login', authController.login)
 

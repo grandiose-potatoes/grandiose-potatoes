@@ -1,6 +1,5 @@
-'use strict';
 import React from 'react';
-var Router = require('react-router')
+const Router = require('react-router');
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -8,11 +7,11 @@ export default class Login extends React.Component {
 
     this.state = {
       username: "",
-      password: ""
-    }
-    this.handelUsernameChange = this.handelUsernameChange.bind(this)
-    this.handelPasswordChange = this.handelPasswordChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+      password: "",
+    };
+    this.handelUsernameChange = this.handelUsernameChange.bind(this);
+    this.handelPasswordChange = this.handelPasswordChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handelUsernameChange(event) {
@@ -29,22 +28,22 @@ export default class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.username);
-    console.log(this.state.password);
     $.ajax({
       type: 'POST',
       url: 'api/login',
-      data: {username: this.state.username, password: this.state.username}
+      data: {
+        username: this.state.username, password: this.state.username,
+      },
     }).done(function(path){
-      Router.browserHistory.push(path)
-    })
+      Router.browserHistory.push(path);
+    });
   }
 
   render() {
     return (
       <div className="col s8 offset-s2">
-      <h2 className="header center blue-text blue-darken-1">Login</h2>
-      <br />
+        <h2 className="header center blue-text blue-darken-1">Login</h2>
+        <br />
         <div className="row">
           <form className="col s12" onSubmit={this.handleSubmit}>
             <div className="row">
@@ -60,10 +59,10 @@ export default class Login extends React.Component {
               </div>
             </div>
             <button className="waves-effect waves-light btn blue darken-1">Login</button>
-            <p>Not a user? <a href='signup'>SignUp</a></p>
+            <p>Not a user? <a href="signup">SignUp</a></p>
           </form>
         </div>
       </div>
     );
   }
-}
+};

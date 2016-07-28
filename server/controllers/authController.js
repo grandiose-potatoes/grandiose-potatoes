@@ -46,7 +46,7 @@ var comparePassword = function(inputRawPassword, dbHashedPassword) {
 var createSession = function(req, res, user) {
   return req.session.regenerate(function() {
     req.session.user = user
-    res.send('/home')
+    res.send('/record')
   })
 }
 
@@ -80,10 +80,9 @@ var login = function(req, res) {
         }
       })
     } else { // user is not in db
-    res.send('/login')
-  }
-})
-
+      res.send('/login')
+    }
+  })
 }
 
 
