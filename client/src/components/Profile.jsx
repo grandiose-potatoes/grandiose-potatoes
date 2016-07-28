@@ -5,7 +5,7 @@ class Profile extends React.Component {
 		super(props)
 
 		this.state = {
-			currentUser: 'hard-coded-user';
+			currentUser: 'hard-coded-user'
 		}
 	}
 
@@ -13,12 +13,12 @@ class Profile extends React.Component {
 		return (
 			<div className="container">
 	      <div className="sidebar">
-	      	<p>USERS</p>
-	      	<p>Ryan</p>
-	      	<p>Robb</p>
-	      	<p>John Cena</p>
+	      	<p className="sidebar-entry">USERS</p>
+	      	<p className="sidebar-entry">Ryan</p>
+	      	<p className="sidebar-entry">Robb</p>
+	      	<p className="sidebar-entry">John Cena</p>
 	      </div>
-	      // <ChatSpace />
+	      
 	      <div className="main">
 	        <ul className="message-list">
 	        	<li className="current-user">@greg: video, url: goodmorning</li>
@@ -29,4 +29,6 @@ class Profile extends React.Component {
 	    </div>
 		);
 	}
-}
+};
+
+export default Profile;

@@ -11,6 +11,9 @@ function Home(props) {
         <Link to="/record" id="download-button" className="btn-large waves-effect waves-light blue darken-1">
           <span>record a video</span>
         </Link>
+        <Link to="/profile" id="download-button" className="btn-large waves-effect waves-light blue darken-1">
+          <span>go to profile</span>
+        </Link>
       </div>
       <div className="section">
         <div className="row">

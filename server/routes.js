@@ -20,4 +20,6 @@ router.get('/record', homeController.sendHome);
 // Handle unknown routes;
 // router.get(*, errorHandler);
 
+router.get('/profile', homeController.sendHome);
+
 module.exports = router;
