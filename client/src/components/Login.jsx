@@ -1,5 +1,7 @@
 'use strict';
 import React from 'react';
+import { Link } from 'react-router'
+var Router = require('react-router')
 // import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 // import {Questions} from './Questions.jsx';
 
@@ -14,20 +16,22 @@ export default class Login extends React.Component {
     this.handelUsernameChange = this.handelUsernameChange.bind(this)
     this.handelPasswordChange = this.handelPasswordChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.navigateToPage = this.navigateToPage.bind(this)
   }
 
   handelUsernameChange(event) {
     this.setState({
       username: event.target.value,
     });
-    console.log(this.state.username)
   }
 
   handelPasswordChange(event) {
     this.setState({
       password: event.target.value,
     });
-    console.log(this.state.password)
+  }
+  navigateToPage(link) {
+    
   }
 
   handleSubmit(event) {
@@ -37,18 +41,20 @@ export default class Login extends React.Component {
     $.ajax({
       type: 'POST',
       url: 'api/login',
-      data: {username: this.state.username, password: this.state.username},
-      success: function(data) {
-      },
-      error:  function(err) {
-      }
+      data: {username: this.state.username, password: this.state.username}
+    }).done(function(data){
+      console.log('/')
+        Router.browserHistory.push('/record')
+      // }
     })
   }
+
 
   render() {
     return (
       <div className="col s8 offset-s2">
       <h2 className="header center blue-text blue-darken-1">Login</h2>
+        <Link to='/' />
       <br />
         <div className="row">
           <form className="col s12" onSubmit={this.handleSubmit}>
@@ -65,10 +71,14 @@ export default class Login extends React.Component {
               </div>
             </div>
             <button className="waves-effect waves-light btn blue darken-1">Login</button>
-            <p>Not a user? <a href='login'>SignUp</a></p>
+            <p>Not a user? <a href='signup'>SignUp</a></p>
           </form>
         </div>
       </div>
     );
   }
 }
+
+// Login.contextTypes = {
+//   router: React.PropTypes.object.isRequired
+// }
