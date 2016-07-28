@@ -6,24 +6,21 @@ const db = new Sequelize(config.database, config.username, config.password, {
   host: config.host,
 });
 
-// TODO implement User and User Auth
-// var User = db.define('user', {
-//   username: Sequelize.STRING,
-//   password: Sequelize.STRING,
-//   partnerId: Sequelize.INTEGER,
-// });
-
-const Video = db.define('video', {
-  // Create a unique alphanumeric id
-  code: Sequelize.STRING,
-  url: Sequelize.STRING,
-  // Allow for users to only be viewed by intended receiver
-  // receiverId: Sequelize.INTEGER
+const User = db.define('user', {
+  username: Sequelize.STRING,
+  password: Sequelize.STRING,
 });
 
-// Setup User Video relationship
-// Video.belongsTo(User);
-// User.hasMany(Video);
+const Message = db.define('message', {
+  url: Sequelize.STRING,
+  type: Sequelize.STRING,
+});
+
+// Setup User Message relationship
+Message.belongsTo(User, {as: 'Sender'});
+Message.belongsTo(User, {as: 'Receiver'});
+User.hasMany(Message, { foreignKey: 'SenderId' });
+User.hasMany(Message, { foreignKey: 'ReceiverId' });
 
 const Question = db.define('question', {
   txt: Sequelize.STRING,
@@ -35,11 +32,12 @@ const Question = db.define('question', {
 // Question.belongsTo(User);
 // User.hasMany(Question);
 
-// User.sync();
-Video.sync();
+User.sync();
+Message.sync();
 Question.sync();
 
 module.exports = {
-  Video,
+  User,
+  Message,
   Question,
 };
