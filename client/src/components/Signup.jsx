@@ -1,8 +1,6 @@
 'use strict';
 import React from 'react';
 var Router = require('react-router')
-// import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
-// import {Questions} from './Questions.jsx';
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -30,7 +28,6 @@ export default class Signup extends React.Component {
   }
 
   handleSubmit(event) {
-    
     event.preventDefault();
     console.log(this.state.username);
     console.log(this.state.password);
@@ -39,11 +36,8 @@ export default class Signup extends React.Component {
       url: 'api/signup',
       data: {username: this.state.username, password: this.state.password}
     })
-    .done(function(data) {
-      // console.log('data')
-      // if(data !== undefined) {
-        Router.browserHistory.push(data)
-      // }
+    .done(function(path) {
+      Router.browserHistory.push(path)
     })
   }
 
