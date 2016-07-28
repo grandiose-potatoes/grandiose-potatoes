@@ -37,12 +37,11 @@ export default class Signup extends React.Component {
     $.ajax({
       type: 'POST',
       url: 'api/signup',
-      data: {username: this.state.username, password: this.state.username},
+      data: {username: this.state.username, password: this.state.password},
       success: function(data) {
-        console.log('Signup POST data: ', data)
+        
       },
       error:  function(err) {
-        console.log('Signup Post error: ', err)
       }
     })
   }

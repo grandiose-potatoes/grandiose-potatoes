@@ -2,8 +2,13 @@ var db = require('./db/db');
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = require('./routes');
+var session = require('express-session')
 
 var app = express();
+
+app.use(session({
+  secret: 'test code'
+}))
 
 app.use(express.static(__dirname + '/../client'));
 app.port = process.env.PORT || 3000;
