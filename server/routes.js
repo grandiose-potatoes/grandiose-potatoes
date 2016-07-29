@@ -2,6 +2,8 @@ const questionsController = require('./controllers/questionsController.js');
 const videosController = require('./controllers/videosController.js');
 const homeController = require('./controllers/homeController.js');
 const router = require('express').Router();
+const router = require('express').Router();
+const db = require('./db/db.js');
 
 router.get('/api/questions', questionsController.getQuestions);
 router.post('/api/questions', questionsController.createQuestion);
