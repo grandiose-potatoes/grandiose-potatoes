@@ -1,7 +1,15 @@
 var db = require('../db/db.js');
 
 var signup = function(req, res) {
+  var username = req.body.username
   // check to see if the username is in the database
+  db.User.findOne({
+    where: { username: username}
+  }).then(function(userID) {
+    if(userID !== undefined) {
+      
+    }
+  })
     // if it is not in the database
       // hash the password
       // add user & password to database
