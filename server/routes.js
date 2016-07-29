@@ -15,6 +15,7 @@ router.post('/api/videos', videosController.createVideo);
 // React Router will handle showing the appropriate views
 router.get('/videos/*', homeController.sendHome);
 router.get('/record', homeController.sendHome);
+router.get('/login', homeController.sendHome);
 
 // TODO
 // Handle unknown routes;
