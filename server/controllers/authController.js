@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const db = require('../db/db.js');
 const bcrypt = require('bcrypt');
 
