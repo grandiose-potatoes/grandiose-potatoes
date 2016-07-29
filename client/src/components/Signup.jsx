@@ -1,6 +1,5 @@
-'use strict';
 import React from 'react';
-var Router = require('react-router')
+const Router = require('react-router');
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -8,11 +7,11 @@ export default class Signup extends React.Component {
 
     this.state = {
       username: "",
-      password: ""
-    }
-    this.handelUsernameChange = this.handelUsernameChange.bind(this)
-    this.handelPasswordChange = this.handelPasswordChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+      password: "",
+    };
+    this.handelUsernameChange = this.handelUsernameChange.bind(this);
+    this.handelPasswordChange = this.handelPasswordChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handelUsernameChange(event) {
@@ -29,23 +28,23 @@ export default class Signup extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.username);
-    console.log(this.state.password);
     $.ajax({
       type: 'POST',
       url: 'api/signup',
-      data: {username: this.state.username, password: this.state.password}
+      data: {
+        username: this.state.username, password: this.state.password,
+      },
     })
     .done(function(path) {
-      Router.browserHistory.push(path)
-    })
+      Router.browserHistory.push(path);
+    });
   }
 
   render() {
     return (
       <div className="col s8 offset-s2">
-      <h2 className="header center blue-text blue-darken-1">Signup</h2>
-      <br />
+        <h2 className="header center blue-text blue-darken-1">Signup</h2>
+        <br />
         <div className="row">
           <form className="col s12" onSubmit={this.handleSubmit} >
             <div className="row">
@@ -62,7 +61,7 @@ export default class Signup extends React.Component {
             </div>
             <button className="waves-effect waves-light btn blue darken-1">Signup</button>
           </form>
-          <p>Already a user? <a href='login'>Login</a></p>
+          <p>Already a user? <a href="login">Login</a></p>
         </div>
       </div>
     );
