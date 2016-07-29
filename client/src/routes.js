@@ -13,6 +13,6 @@ export default (
     <Route path="videos/:id" component={VideoPlayer} />
     <Route path="profile" component={Profile} />
     <Route path="login" component={Login} />
-    <Route path="signup" component={Signup}/>
+    <Route path="signup" component={Signup} />
   </Route>
 );

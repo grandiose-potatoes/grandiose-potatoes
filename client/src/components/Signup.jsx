@@ -35,7 +35,7 @@ export default class Signup extends React.Component {
         username: this.state.username, password: this.state.password,
       },
     })
-    .done(function(path) {
+    .done((path) => {
       Router.browserHistory.push(path);
     });
   }
