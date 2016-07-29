@@ -9,8 +9,6 @@ var getUser = function(username) {
     where: {
       username: username
     }
-  }).then(function(user) {
-    return user
   })
 }
 
@@ -18,85 +16,74 @@ var createUser = function(username, password) {
   return db.User.create({
     username: username,
     password: password
-  }).then(function(user) {
-    return user
   })
 }
 
 var hashPassword = function(password) {
-  bcrypt.hash(password, saltRounds, function(err, hash) {
-    if(err) {
-      throw err
-    } else {
-      return hash
-    }
+  return new Promise(function(resolve, reject) {
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(hash)
+      }
+    })
+  })
+}
+
+var comparePassword = function(inputRawPassword, dbHashedPassword) {
+  return new Promise(function(resolve, reject) {
+    bcrypt.compare(inputRawPassword, dbHashedPassword, function(err, response) {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(response)
+      }
+    })
+  })
+}
+
+var createSession = function(req, res, user) {
+  return req.session.regenerate(function() {
+    req.session.user = user
+    res.send('/home')
   })
 }
 
 var signup = function(req, res) {
-  var username = req.body.username
-  var password = req.body.password
-  // console.log('first', password)
-  db.User.findOne({
-    where: {
-      username: username
-    } 
-  }).then(function(user) {
-    // console.log('last', password)
-    if(user === null) {
-      bcrypt.hash(password, saltRounds, function(err, hash) {
-        if(err) { throw err 
-        } else {
-          return db.User.create({
-            username: username,
-            password: hash
-          })
-          .then(
-            function(user) {
-              req.session.regenerate(function() {
-                req.session.userID = user.username
-              })
-            }
-          )
-        }
+  getUser(req.body.username)
+  .then(function(user) {
+    if(user === null) { // if no user in database...
+      hashPassword(req.body.username)
+      .then(function(hash) { 
+        createUser(req.body.username, hash)
+        .then(function(user) {
+          createSession(req, res, user.username)
+        })
       })
-      console.log('new user has been created')
-      res.send('/record')
-    } else {
-      console.log('this user has alredy been in the database')
+    } else { // user is already in database
       res.send('/signup')
     }
   })
 }
 
 var login = function(req, res) {
-  console.log('test this out', req.body)
-  var username = req.body.username;
-  var password = req.body.password;
-  db.User.findOne({
-    where: {
-      username: username
-    }
-  }).then(function(user) {
+  getUser(req.body.username)
+  .then(function(user) {
     if(user !== null) {
-      bcrypt.compare(password, user.password, function(err, results) {
-        if(err) { throw err
-        } else if (results) {
-          req.session.regenerate(function() {
-            req.session.userID = username
-          })
-          console.log('your password matches what we have on record')
-          res.send('/record')
-        } else {
-          console.log('your password does not match what we have on record')
+      comparePassword(req.body.password, user.password)
+      .then(function(success) {
+        if(success) {
+          createSession(req, res, user.username)
+        } else { // password does not match
           res.send('/login')
         }
       })
-    } else {
-      console.log('there is no user in our database with that user')
-      res.send('/login')
-    }
-  })
+    } else { // user is not in db
+    res.send('/login')
+  }
+})
+
 }
 
 

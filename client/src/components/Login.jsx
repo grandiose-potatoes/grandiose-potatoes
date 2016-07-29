@@ -1,9 +1,6 @@
 'use strict';
 import React from 'react';
-import { Link } from 'react-router'
 var Router = require('react-router')
-// import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
-// import {Questions} from './Questions.jsx';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -16,7 +13,6 @@ export default class Login extends React.Component {
     this.handelUsernameChange = this.handelUsernameChange.bind(this)
     this.handelPasswordChange = this.handelPasswordChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.navigateToPage = this.navigateToPage.bind(this)
   }
 
   handelUsernameChange(event) {
@@ -30,9 +26,6 @@ export default class Login extends React.Component {
       password: event.target.value,
     });
   }
-  navigateToPage(link) {
-    
-  }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -42,19 +35,15 @@ export default class Login extends React.Component {
       type: 'POST',
       url: 'api/login',
       data: {username: this.state.username, password: this.state.username}
-    }).done(function(data){
-      console.log('/')
-        Router.browserHistory.push('/record')
-      // }
+    }).done(function(path){
+      Router.browserHistory.push(path)
     })
   }
-
 
   render() {
     return (
       <div className="col s8 offset-s2">
       <h2 className="header center blue-text blue-darken-1">Login</h2>
-        <Link to='/' />
       <br />
         <div className="row">
           <form className="col s12" onSubmit={this.handleSubmit}>
@@ -78,7 +67,3 @@ export default class Login extends React.Component {
     );
   }
 }
-
-// Login.contextTypes = {
-//   router: React.PropTypes.object.isRequired
-// }
