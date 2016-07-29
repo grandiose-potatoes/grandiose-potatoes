@@ -13,7 +13,7 @@ router.get('/api/videos', videosController.getVideo);
 router.post('/api/videos', videosController.createVideo);
 
 router.post('/api/signup', authController.signup);
-// router.post('/api/login', authController.login)
+router.post('/api/login', authController.login);
 
 // Send homepage when users route to videos or record endpoint
 // React Router will handle showing the appropriate views

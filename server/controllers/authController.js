@@ -33,51 +33,74 @@ var hashPassword = function(password) {
   })
 }
 
-// var signup = function(req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   var hashedPassword
-//   console.log('ahhhh real monsters', getUser(username))
-//   getUser(username) {
-//     hashedPassword = hashPassword(password)
-//     // var newUser = createUser(username, hashedPassword)
-//     // createUser(username, hashedPassword)
-//       // .then(function(user) {
+var signup = function(req, res) {
+  var username = req.body.username
+  var password = req.body.password
+  // console.log('first', password)
+  db.User.findOne({
+    where: {
+      username: username
+    } 
+  }).then(function(user) {
+    // console.log('last', password)
+    if(user === null) {
+      bcrypt.hash(password, saltRounds, function(err, hash) {
+        if(err) { throw err 
+        } else {
+          return db.User.create({
+            username: username,
+            password: hash
+          })
+          .then(
+            function(user) {
+              req.session.regenerate(function() {
+                req.session.userID = user.username
+              })
+            }
+          )
+        }
+      })
+      console.log('new user has been created')
+      res.send('/record')
+    } else {
+      console.log('this user has alredy been in the database')
+      res.send('/signup')
+    }
+  })
+}
 
-//       // });
-
-//     return db.User.create({
-//       username: username,
-//       password: hashedPassword
-//     })
-//     .then(function(user) {
-//       req.session.regenerate(function() {
-//         // req.session.userID = newUser.username
-//         req.session.save()
-//       })
-//     })
-//   } else { 
-//   }
-// }
-
-// var login = function(req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   var userID = getUser(username);
-  // if(user) { // if user is in the dataabe
-    // check to see if the matches the hashed password in the database
-    
-  
-
-        // if password matches, create a session
-      // if passwords to not match
-        // redirect to login page
-    // if user is not in the database
-      // redirect to login page  
-// }
+var login = function(req, res) {
+  console.log('test this out', req.body)
+  var username = req.body.username;
+  var password = req.body.password;
+  db.User.findOne({
+    where: {
+      username: username
+    }
+  }).then(function(user) {
+    if(user !== null) {
+      bcrypt.compare(password, user.password, function(err, results) {
+        if(err) { throw err
+        } else if (results) {
+          req.session.regenerate(function() {
+            req.session.userID = username
+          })
+          console.log('your password matches what we have on record')
+          res.send('/record')
+        } else {
+          console.log('your password does not match what we have on record')
+          res.send('/login')
+        }
+      })
+    } else {
+      console.log('there is no user in our database with that user')
+      res.send('/login')
+    }
+  })
+}
 
 
-// module.exports = {
-  // signup: signup,
-  // login: login,
-// };
+module.exports = {
+  signup: signup,
+  login: login,
+};

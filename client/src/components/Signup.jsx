@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+var Router = require('react-router')
 // import { getPreSignedUrl, getSupportedTypes, getQuestions, putObjectToS3, postVideoUrl } from '../recordUtil.js';
 // import {Questions} from './Questions.jsx';
 
@@ -20,29 +21,29 @@ export default class Signup extends React.Component {
     this.setState({
       username: event.target.value,
     });
-    console.log(this.state.username)
   }
 
   handelPasswordChange(event) {
     this.setState({
       password: event.target.value,
     });
-    console.log(this.state.password)
   }
 
   handleSubmit(event) {
+    
     event.preventDefault();
     console.log(this.state.username);
     console.log(this.state.password);
     $.ajax({
       type: 'POST',
       url: 'api/signup',
-      data: {username: this.state.username, password: this.state.password},
-      success: function(data) {
-        
-      },
-      error:  function(err) {
-      }
+      data: {username: this.state.username, password: this.state.password}
+    })
+    .done(function(data) {
+      // console.log('data')
+      // if(data !== undefined) {
+        Router.browserHistory.push(data)
+      // }
     })
   }
 
@@ -65,7 +66,7 @@ export default class Signup extends React.Component {
                 <label htmlFor="password">Password</label>
               </div>
             </div>
-            <button className="waves-effect waves-light btn blue darken-1">Login</button>
+            <button className="waves-effect waves-light btn blue darken-1">Signup</button>
           </form>
           <p>Already a user? <a href='login'>Login</a></p>
         </div>
