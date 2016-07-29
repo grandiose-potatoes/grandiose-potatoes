@@ -7,6 +7,10 @@ const app = express();
 app.use(express.static(`${__dirname}/../client`));
 app.use(session({ secret: 'test code' }));
 
+app.use(session({
+  secret: 'test code',
+}));
+
 app.port = process.env.PORT || 3000;
 
 app.listen(app.port, () => {

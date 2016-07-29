@@ -1,7 +1,7 @@
 {
   "name": "grandiose-potatoes",
   "version": "1.0.0",
-  "description": "Video Messageing",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
@@ -12,7 +12,7 @@
     "postinstall": "cp ./node_modules/webrtc-adapter/out/adapter.js ./client/src && npm run build:prod"
   },
   "author": "",
-  "license": "",
+  "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.4.7",
     "bluebird": "^3.4.1",
