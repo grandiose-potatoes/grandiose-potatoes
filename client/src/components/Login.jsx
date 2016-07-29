@@ -8,6 +8,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="col s8 offset-s2">
+      <h2 className="header center blue-text blue-darken-1">Login</h2>
       <br />
         <div className="row">
           <form className="col s12">
@@ -24,11 +25,10 @@ export default class Login extends React.Component {
               </div>
             </div>
             <a className="waves-effect waves-light btn blue darken-1">Login</a>
+            <p>Not a user? <a href='signup'>SignUp</a></p>
           </form>
         </div>
       </div>
     );
   }
-
-
 }
