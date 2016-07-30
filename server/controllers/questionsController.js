@@ -1,24 +1,23 @@
-var db = require('../db/db.js');
+const db = require('../db/db.js');
 
-
-//return all questions from the database
-var getQuestions = function(req, res) {
-  db.Question.findAll().then(function(questions) {
+// Return all questions from the database
+function getQuestions(req, res) {
+  db.Question.findAll().then((questions) => {
     res.send(questions);
   });
-};
+}
 
-//Create a question 
-var createQuestion = function(req, res) {
-  var question = req.body.txt;
-  db.Question.create({txt: question})
-    .then(function(question) {
+// Create a question
+function createQuestion(req, res) {
+  const question = req.body.txt;
+
+  db.Question.create({ txt: question })
+    .then((result) => {
       res.end();
     });
-};
+}
 
 module.exports = {
-  getQuestions: getQuestions,
-  createQuestion: createQuestion
+  getQuestions,
+  createQuestion,
 };
-
